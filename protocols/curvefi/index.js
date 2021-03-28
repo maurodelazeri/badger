@@ -67,11 +67,9 @@ async function init(web3Obj) {
 
   await loadNonStandartsTokens();
 
-  //  await populateSwapPools(0);
-
-  const pair = await getPoolData("0xdebf20617708857ebe4f679508e7b7863a8a8eee");
-  console.log(pair);
-  process.exit();
+  // const pair = await getPoolData("0xdebf20617708857ebe4f679508e7b7863a8a8eee");
+  // console.log(pair);
+  // process.exit();
 
   // If we already have tokens in memory, lets save some time pre loading it
   const tokens = await loadListFromMemory("TOKENS");
@@ -122,7 +120,7 @@ async function init(web3Obj) {
     await loadMaps();
   }
 
-  //swapWatcher();
+  swapWatcher();
 
   console.log("[CURVEFI] Started", totalPools, "pools");
 
@@ -463,6 +461,8 @@ async function streamWorker(sync) {
         tokens: pair.tokens,
       };
 
+      console.log(ticker);
+
       ZMQ.zmqSendMsg("TICKERS_CURVEFI", poolID, JSON.stringify(ticker));
 
       await redisClient.hset("POOLS:CURVEFI", poolID, JSON.stringify(pair));
@@ -487,7 +487,7 @@ const swapWatcher = async () => {
   web3.eth
     .subscribe("logs", {
       topics: [
-        "0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1", // SYNC
+        "0x8b3e96f2b889fa771c53c981b40daf005f63f637f1869f707052d15a3dd97140", // TokenExchange
       ],
     })
     .on("connected", async () => {
