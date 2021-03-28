@@ -436,6 +436,8 @@ It is important to bear in mind that spot price, which is the theoretical price 
 ### Uniswap V2 and Sushiswap
 The prices are calculated using the constant product formula `x * y = k` where pricing function is exactly equal to the ratio of the reserves available to the contract, when no trading fees are taken.
 
+**Spot Price**
+
 Each pair of tokens in a pool has a spot price defined entirely by the balances that each token carries, since we can assume the weights are always balanced in 50% for each token.
 
 <img src="https://latex.codecogs.com/svg.latex?SP^o_i = \frac{{B_i}}{{B_o} }" 
@@ -486,6 +488,14 @@ If you want to know how many `USDC` you will need to get `1` `WETH` you have to:
 
 ### Balancer
 Balancer is essentially a generalization of the constant product rule to pools containing two or more tokens. In addition, Balancer Pools assign relative weights to each token, to accommodate pools of tokens with significantly different valuations. The weights represent the proportion of each token in the total pool
+
+Core concepts are:
+
+* Multiple tokens per pool: Rather than just having a USDC/COMP (50/50) pool, you can actually have a USDC/COMP/LEND/SNX pool (yes 5 tokens) that stay based on a certain weight (10/10/50/30)! Why would anyone want to do it? We’ll find out but for now it can act as an automatic rebalancing ETF where you can get consistent exposure to multiple tokens at onc
+* Dynamic fees: that can be set by the liquidity providers or owner of a pool. Sounds simple but if a large majority of LPs think that the liquidity they provide to the ecosystem is valuable, they can come together to increase the fee to increase profits. Such flexibility should be necessary to incentivise capital providers.
+* Token: Some skeptics may or may not argue that token incentivised usage is false, however whichever way you look at it the fact that people can earn 20%+ APRs for supplying liquidity and earning native tokens that will accrue value once protocol fees are turned on is a deal.
+
+**Spot Price**
 
 Each pair of tokens in a pool has a spot price defined entirely by the weights and balances of just that pair of tokens. The spot price between any two tokens, or in short is the the ratio of the token balances normalized by their weights:
 
@@ -575,9 +585,11 @@ If you want to know how many `WBTC` you will need to get `1` `WETH` you have to:
 
 ### Bancor
 
-Bancor uses a concept called `Dynamic Automated Market Maker` (DAMM) 
+Bancor’s new AMM design is one that brings the kind of innovation to AMMs that we haven’t seen since they were first announced. The idea is unique in that it uses an oracle to set the weights of a pool rather than relying on a fixed weight. So how does it compare to a regular AMM? Well, suppose in a 50/50 pool of ETH/USDC, if the price of ETH increases to $110 from $100, the pool doesn’t rebalance to force itself back to be 50/50 through arbitrages. Instead, the pool will be 53%, 48% pool (rough numbers).
 
-DAMMs make use of price oracles to determine if the balance between tokens in the pool should be changed. Price oracles such as Chainlink provide external prices to smart contracts in a decentralized and reliable way. 
+So what incentive is there to keep the pools at 50/50 (or ample liquidity)? The twist here is relying on fees. Regardless of the current weight of the pools, pools are always split 50% between the two pairings. So if one side gets out of balance, the other side will receive a greater portion of the fees compared to the other side. This incentive allows liquidity to be healthy on both sides.
+
+Bancor V2 relies on every token being paired with BNT, the native asset of the ecosystem. At a first glance this can create friction as people need to route orders through BNT and hope there’s enough BNT being provided on the other side (Bancor doesn’t require both tokens to be supplied at once). However coupled with a liquidity mining scheme, demand for BNT can be skyrocketed and creating a positive flywheel where an increase in token price causes an imbalance in pool weights (fees out of proportion, not prices) which attracts more liquidity to bridge the gap.
 
 Core concepts of v2 pools are:
 
@@ -585,6 +597,8 @@ Core concepts of v2 pools are:
 * Staked Balance and Current Balance: For each reserve, staked balance indicates the total amount of tokens staked by liquidity providers, and current balance indicates the amount of tokens held in the reserve.
 * Dynamic Weights: The pool updates reserve weights to incentivize market participants to equalize the current balance with the staked balance.
 * Price Feeds: Price feeds are used for calculating the weights such that after arbitrage closure, the pool price becomes equal to the market price.
+
+**Spot Price**
 
 Each pair of tokens in a pool has a spot price defined entirely by the weights and balances of just that pair of tokens. The spot price between any two tokens, or in short is the the ratio of the token balances normalized by their weights:
 
@@ -640,16 +654,13 @@ If you want to know how many `BNT` you will need to get `1` `LPL` you have to: `
 
 ### Curve
 
-A Curve pool is a smart contract that implements the StableSwap invariant and thereby allows for the exchange of two or more tokens.
+Before Curve came along, stable coins were a bit of a challenge to swap between since the slippage would be anywhere between 1-3% which is a large chunk if you’re dealing with pure dollars to make an arbitrary transaction. Curve came in and solved this through a novel formula that keeps the price fairly constant in a certain region of the curve while making it more lopsided in other regions. Here’s a little picture of how the curve looks:
 
-More broadly, Curve pools can be split into three categories:
+![](_media/curve.png)
 
-* Plain pools: a pool where two or more stablecoins are paired against one another.
+As you can see it has a region where it’s fairly flat but then sloped near the edges. This flat region helps Curve optimise the prices so that when you swap USDC for USDT you experience less than 1% slippage. Each pool have a differente `Amplification coefficient.` The amplification co-efficient ("A") determines a pool’s tolerance for imbalance between the assets within it. A higher value means that trades will incur slippage sooner as the assets within the pool become imbalanced. The appropriate value for A is dependent upon the type of coin being used within the pool. It is possible to modify the amplification coefficient for a pool after it has been deployed. However, it requires a vote within the Curve DAO and must reach a 15% quorum.
 
-* Lending pools: a pool where two or more wrapped tokens (e.g., cDAI) are paird against one another, while the underlying is lent out on some other protocol.
-
-* Metapools: a pool where a stablecoin is paired against the LP token from another pool.
-
+**Spot Price**
 
 Each pair of tokens in a pool has a spot price defined entirely by the weights and balances of just that pair of tokens. The spot price between any two tokens, or in short is the the ratio of the token balances normalized by their weights:
 

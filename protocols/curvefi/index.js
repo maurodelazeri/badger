@@ -258,9 +258,9 @@ const getPoolData = async (poolID) => {
       pool_id: poolID,
       symbol: symbol,
       name: name,
-      swap_fee: swap_fee,
+      swap_fee: swap_fee.toString(),
       decimals: decimals.toString(),
-      immutable: true,
+      immutable: false,
       tokens: tokens,
     };
   } catch (error) {
