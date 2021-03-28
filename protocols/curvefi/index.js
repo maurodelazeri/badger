@@ -67,9 +67,9 @@ async function init(web3Obj) {
 
   await loadNonStandartsTokens();
 
-  // await populateSwapPools(0);
+  //  await populateSwapPools(0);
 
-  const pair = await getPoolData("0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7");
+  const pair = await getPoolData("0xdebf20617708857ebe4f679508e7b7863a8a8eee");
   console.log(pair);
   process.exit();
 
@@ -227,14 +227,13 @@ const getPoolData = async (poolID) => {
     const decimals = lp.decimals.toString();
 
     let tokens = [];
+    const amplification = await registryContract.methods.get_A(poolID).call();
 
-    const rates = await registryContract.methods.get_rates(poolID).call();
     const underlying_balances = await registryContract.methods
-      .get_underlying_balances(poolID)
+      .get_balances(poolID)
       .call();
-    const coins = await registryContract.methods
-      .get_underlying_coins(poolID)
-      .call();
+
+    const coins = await registryContract.methods.get_coins(poolID).call();
 
     for (var i in coins) {
       if (coins[i].toString() == "0x0000000000000000000000000000000000000000") {
@@ -249,7 +248,7 @@ const getPoolData = async (poolID) => {
       }
 
       token.reserves = underlying_balances[i];
-      token.weight = rates[i];
+      token.weight = 100;
 
       tokens.push(token);
     }
@@ -260,11 +259,16 @@ const getPoolData = async (poolID) => {
       name: name,
       swap_fee: swap_fee.toString(),
       decimals: decimals.toString(),
+      amplification: amplification.toString(),
       immutable: false,
       tokens: tokens,
     };
   } catch (error) {
-    console.error("[CURVEFI] getPoolData", error.name + ":" + error.message);
+    console.error(
+      "[CURVEFI] getPoolData",
+      poolID,
+      error.name + ":" + error.message
+    );
   }
 };
 
