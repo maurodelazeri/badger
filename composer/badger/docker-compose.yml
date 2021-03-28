@@ -1,0 +1,154 @@
+version: "3"
+
+networks:
+  default:
+    external:
+      name: external-example
+
+services:
+  cheetah:
+    image: zinnionlcc/cpp
+    hostname: cheetah
+    container_name: cheetah
+    restart: unless-stopped
+    environment:
+      - LIVE=true
+      - DEBUG=true
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - START_BIN=cheetah
+    ports:
+      - 31337:31337/tcp
+      - 31338:31338/tcp
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+        
+  badger_docs:
+    image: zinnionlcc/node
+    hostname: badger_docs
+    container_name: badger_docs
+    restart: unless-stopped
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger_docs
+    ports:
+      - 8080:8080/tcp
+    command:
+      - start_docs.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  sailfish:
+    image: zinnionlcc/cpp
+    hostname: sailfish
+    container_name: sailfish
+    restart: unless-stopped
+    environment:
+      - LIVE=true
+      - DEBUG=true
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - START_BIN=sailfish
+      - ZMQ_SUB_CONNECTION=tcp://cheetah.zinnion.com:31338
+    ports:
+      - 9001:9001/tcp
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+      
+  badger_uniswap_v2:
+    image: zinnionlcc/node
+    hostname: badger_uniswap_v2
+    container_name: badger_uniswap_v2
+    restart: unless-stopped
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=uniswap_v2
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+
+  badger_sushiswap:
+    image: zinnionlcc/node
+    hostname: badger_sushiswap
+    container_name: badger_sushiswap
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=sushiswap
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+
+  badger_balancer:
+    image: zinnionlcc/node
+    hostname: badger_balancer
+    container_name: badger_balancer
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=balancer
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  badger_bancor:
+    image: zinnionlcc/node
+    hostname: badger_bancor
+    container_name: badger_bancor
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=bancor
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"        
