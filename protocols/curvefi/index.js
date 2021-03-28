@@ -245,7 +245,10 @@ const getPoolData = async (poolID) => {
         return;
       }
 
-      token.reserves = underlying_balances[i];
+      token.reserves = Decimal(underlying_balances[i])
+        .dividedBy("1e" + token.decimals)
+        .toString();
+
       token.weight = 100;
 
       tokens.push(token);
@@ -428,6 +431,7 @@ const createNewPool = async (poolID) => {
 
 async function streamWorker(sync) {
   try {
+    console.log(sync);
     const poolID = sync.address.toLowerCase();
 
     if (pool_pairs_map.has(poolID)) {
