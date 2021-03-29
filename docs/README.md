@@ -673,38 +673,47 @@ Where:
  - **Wi** is the weight of token i
  - **Wo** is the weight of token o
 
-Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
+Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
 
  ```json
 {
-  "type": "ticker",
-  "sequence": 57,
-  "protocol": "BANCOR",
-  "swap_fee": "0.1",
-  "pool_id": "0x6e93665ad9324364e87a61f055969e10c668ac56",
-  "block_number": 12116498,
-  "transaction_hash": "0xc7952e5a1e00cbd270eb1ebbff3d6b261e4548db7eaca562106f87ea711641b0",
-  "processed_timestamp": 1616786160,
-  "name": "BNTLPL",
-  "immutable": true,
-  "symbol": "BNTLPL",
-  "decimals": "18",
-  "tokens": [
+  type: 'ticker',
+  sequence: 1,
+  protocol: 'CURVEFI',
+  amplification: '600',
+  swap_fee: '0.04',
+  pool_id: '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
+  block_number: 12134020,
+  transaction_hash: '0x26296776b7b0605c5730b0917f02ffd892b2d99277b4064a24f36f3d37b104f2',
+  processed_timestamp: 1617019321,
+  name: 'Curve.fi DAI/USDC/USDT',
+  immutable: false,
+  symbol: '3Crv',
+  decimals: '18',
+  tokens: [
     {
-      "address": "0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c",
-      "name": "Bancor Network Token",
-      "symbol": "BNT",
-      "decimals": "18",
-      "weight": "50",
-      "reserves": "146082.49365480128013"
+      address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      name: 'Dai Stablecoin',
+      symbol: 'DAI',
+      decimals: '18',
+      reserves: '310935947.12281721688',
+      weight: '0'
     },
     {
-      "address": "0x99295f1141d58a99e939f7be6bbe734916a875b8",
-      "name": "LinkPool",
-      "symbol": "LPL",
-      "decimals": "18",
-      "weight": "50",
-      "reserves": "236719.6487200028937"
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: '6',
+      reserves: '321787391.191811',
+      weight: '0'
+    },
+    {
+      address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      name: 'Tether USD',
+      symbol: 'USDT',
+      decimals: '6',
+      reserves: '367022009.446734',
+      weight: '0'
     }
   ]
 }
