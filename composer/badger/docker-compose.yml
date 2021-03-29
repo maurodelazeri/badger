@@ -152,3 +152,24 @@ services:
       options:
         max-size: "2m"
         max-file: "10"        
+
+  badger_curvefi:
+    image: zinnionlcc/node
+    hostname: badger_curvefi
+    container_name: badger_curvefi
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=curvefi
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"  
+        
