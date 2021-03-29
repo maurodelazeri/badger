@@ -4,8 +4,8 @@
 const fs = require("fs");
 const _colors = require("colors");
 const moment = require("moment");
+const Decimal = require("decimal.js");
 const schedule = require("node-schedule");
-const cliProgress = require("cli-progress");
 const addressProviderABI = JSON.parse(
   fs.readFileSync("./abi/curvefiAddressProviderABI.json")
 );
@@ -249,7 +249,7 @@ const getPoolData = async (poolID) => {
         .dividedBy("1e" + token.decimals)
         .toString();
 
-      token.weight = 100;
+      token.weight = "0";
 
       tokens.push(token);
     }
@@ -291,24 +291,11 @@ const loadListFromMemory = async (hash) => {
 
 async function populateSwapPools(beginPoolIndex) {
   try {
-    // create new progress bar
-    const bar1 = new cliProgress.SingleBar({
-      format:
-        "[CURVEFI] Loading Pools |" +
-        _colors.cyan("{bar}") +
-        "| {percentage}% || {value}/{total} Pools",
-      barCompleteChar: "\u2588",
-      barIncompleteChar: "\u2591",
-      hideCursor: true,
-    });
-
     const allPairsLength = await registryContract.methods.pool_count().call();
 
     if (allPairsLength.length == 0) {
       return false;
     }
-
-    bar1.start(allPairsLength, beginPoolIndex);
 
     for (var i = beginPoolIndex; i < allPairsLength; i++) {
       let poolID = await registryContract.methods.pool_list(i).call();
@@ -357,13 +344,10 @@ async function populateSwapPools(beginPoolIndex) {
           tokens_map.set(clone.tokens[1].address, clone.tokens[1]);
         }
       }
-
-      bar1.update(i);
     }
 
     // process finished
-    bar1.update(allPairsLength);
-
+    console.info("[CURVEFI]", allPairsLength, "pairs loaded");
     totalPools = allPairsLength;
     return allPairsLength;
   } catch (error) {
@@ -431,7 +415,6 @@ const createNewPool = async (poolID) => {
 
 async function streamWorker(sync) {
   try {
-    console.log(sync);
     const poolID = sync.address.toLowerCase();
 
     if (pool_pairs_map.has(poolID)) {
@@ -453,6 +436,7 @@ async function streamWorker(sync) {
         type: "ticker",
         sequence: msgSequence,
         protocol: "CURVEFI",
+        amplification: pair.amplification,
         swap_fee: pair.swap_fee,
         pool_id: poolID,
         block_number: pair.block_number,
