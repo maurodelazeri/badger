@@ -670,58 +670,44 @@ The [Curve Whitepaper](https://curve.fi/files/stableswap-paper.pdf) describes th
 
 *A* is called an amplification coefficient in the Curve Whitepaper. This subjective parameter is set based on the desired properties of the AMM. For example, a higher value of A would decrease slippage (at least at certain price points).
 
-Each pair of tokens in a pool has a spot price defined entirely by the weights and balances of just that pair of tokens. The spot price between any two tokens, or in short is the the ratio of the token balances normalized by their weights:
-
-<img src="https://latex.codecogs.com/svg.latex?SP^o_i = \frac{ \frac{B_i}{W_i} }{ \frac{B_o}{W_o} }" 
-title="SP^o_i = \frac{ \frac{B_i}{W_i} }{ \frac{B_o}{W_o} }" />
-
-Where:
- - **Bi** is the balance of token i, the token being sold by the trader which is going into the pool.
- - **Bo** is the balance of token o, the token being bought by the trader which is going out of the pool.
- - **Wi** is the weight of token i
- - **Wo** is the weight of token o
+Diferently from the other protocols where you need to perform calculations, with curve we provide a field called `virtual_price` where you can consider that the spot price for trading any of the possive pairs since theorically we are trading between stable currencies. We also provide the a field called `amplification` that represents the amplification coefficient detailed above.
 
 Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
 
  ```json
 {
-  type: 'ticker',
-  sequence: 1,
-  protocol: 'CURVEFI',
-  amplification: '600',
-  swap_fee: '0.04',
   pool_id: '0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7',
-  block_number: 12134020,
-  transaction_hash: '0x26296776b7b0605c5730b0917f02ffd892b2d99277b4064a24f36f3d37b104f2',
-  processed_timestamp: 1617019321,
-  name: 'Curve.fi DAI/USDC/USDT',
-  immutable: false,
   symbol: '3Crv',
+  name: 'Curve.fi DAI/USDC/USDT',
+  swap_fee: '0.04',
   decimals: '18',
+  amplification: '600',
+  virtual_price: '1.0149324070969434',
+  immutable: false,
   tokens: [
     {
       address: '0x6b175474e89094c44da98b954eedeac495271d0f',
       name: 'Dai Stablecoin',
       symbol: 'DAI',
       decimals: '18',
-      reserves: '310935947.12281721688',
-      weight: '0'
+      reserves: '299120317.54696152943',
+      weight: '0.3333333333333333'
     },
     {
       address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       name: 'USD Coin',
       symbol: 'USDC',
       decimals: '6',
-      reserves: '321787391.191811',
-      weight: '0'
+      reserves: '327688735.0082',
+      weight: '0.3333333333333333'
     },
     {
       address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       name: 'Tether USD',
       symbol: 'USDT',
       decimals: '6',
-      reserves: '367022009.446734',
-      weight: '0'
+      reserves: '334813498.857104',
+      weight: '0.3333333333333333'
     }
   ]
 }
@@ -729,4 +715,4 @@ Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
 
 In this example we have tokens with different weights therefore, we need to use the formula described above.
 
-If you want to know how many `BNT` you will need to get `1` `LPL` you have to: `(146082.49365480128013/80)` / `(236719.6487200028937/50)` = `0.617111822 BNT` 
+If you want to know how many `DAI` you will need to get `1` `USDC` you simply need to check the field `virtual_price`, in this case: `1.0149324070969434`
