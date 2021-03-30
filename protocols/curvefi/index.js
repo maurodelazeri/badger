@@ -210,7 +210,6 @@ async function getTokenData(address) {
 const getPoolData = async (poolID) => {
   try {
     const rates = await registryContract.methods.get_rates(poolID).call();
-    console.log(rates);
 
     const swap_fee =
       ((await registryContract.methods.get_fees(poolID).call())[0] / 1e10) *
@@ -230,7 +229,7 @@ const getPoolData = async (poolID) => {
 
     let tokens = [];
     const virtual_price = await registryContract.methods
-      .get_virtual_price(poolID)
+      .get_virtual_price_from_lp_token(lpToken)
       .call();
 
     const amplification = await registryContract.methods.get_A(poolID).call();
@@ -239,11 +238,17 @@ const getPoolData = async (poolID) => {
 
     const coins = await registryContract.methods.get_coins(poolID).call();
 
+    let totalTokens = 0;
     for (var i in coins) {
       if (coins[i].toString() == "0x0000000000000000000000000000000000000000") {
         continue;
       }
-
+      totalTokens++;
+    }
+    for (var i in coins) {
+      if (coins[i].toString() == "0x0000000000000000000000000000000000000000") {
+        continue;
+      }
       let token = await getTokenData(coins[i].toLowerCase());
       if (token === null) {
         fs.appendFileSync("tokens.txt", coins[i].toLowerCase() + "\n");
@@ -255,7 +260,7 @@ const getPoolData = async (poolID) => {
         .dividedBy("1e" + token.decimals)
         .toString();
 
-      token.weight = "0";
+      token.weight = (rates[i] / 1e18 / totalTokens).toString();
 
       tokens.push(token);
     }
@@ -267,7 +272,7 @@ const getPoolData = async (poolID) => {
       swap_fee: swap_fee.toString(),
       decimals: decimals.toString(),
       amplification: amplification.toString(),
-      virtual_price: virtual_price.toString(),
+      virtual_price: (virtual_price / 1e18).toString(),
       immutable: false,
       tokens: tokens,
     };
