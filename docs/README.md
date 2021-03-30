@@ -662,6 +662,14 @@ As you can see it has a region where it’s fairly flat but then sloped near the
 
 **Spot Price**
 
+The [Curve Whitepaper](https://curve.fi/files/stableswap-paper.pdf) describes the StableSwap invariant in terms of n coins (with equal weight) in a single liquidity pool.
+
+![](_media/1_curve-formula1.png)
+
+*D* is the variable that remains constant before and after a given trade.
+
+*A* is called an amplification coefficient in the Curve Whitepaper. This subjective parameter is set based on the desired properties of the AMM. For example, a higher value of A would decrease slippage (at least at certain price points).
+
 Each pair of tokens in a pool has a spot price defined entirely by the weights and balances of just that pair of tokens. The spot price between any two tokens, or in short is the the ratio of the token balances normalized by their weights:
 
 <img src="https://latex.codecogs.com/svg.latex?SP^o_i = \frac{ \frac{B_i}{W_i} }{ \frac{B_o}{W_o} }" 

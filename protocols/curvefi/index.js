@@ -67,9 +67,10 @@ async function init(web3Obj) {
 
   await loadNonStandartsTokens();
 
-  // const pair = await getPoolData("0xdebf20617708857ebe4f679508e7b7863a8a8eee");
-  // console.log(pair);
-  // process.exit();
+  // const pair = await getPoolData("0x4ca9b3063ec5866a4b82e437059d2c43d1be596f");
+  const pair = await getPoolData("0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7");
+  console.log(pair);
+  process.exit();
 
   // If we already have tokens in memory, lets save some time pre loading it
   const tokens = await loadListFromMemory("TOKENS");
@@ -208,7 +209,10 @@ async function getTokenData(address) {
 
 const getPoolData = async (poolID) => {
   try {
-    swap_fee =
+    const rates = await registryContract.methods.get_rates(poolID).call();
+    console.log(rates);
+
+    const swap_fee =
       ((await registryContract.methods.get_fees(poolID).call())[0] / 1e10) *
       100;
 
@@ -225,11 +229,13 @@ const getPoolData = async (poolID) => {
     const decimals = lp.decimals.toString();
 
     let tokens = [];
+    const virtual_price = await registryContract.methods
+      .get_virtual_price(poolID)
+      .call();
+
     const amplification = await registryContract.methods.get_A(poolID).call();
 
-    const underlying_balances = await registryContract.methods
-      .get_balances(poolID)
-      .call();
+    const balances = await registryContract.methods.get_balances(poolID).call();
 
     const coins = await registryContract.methods.get_coins(poolID).call();
 
@@ -245,7 +251,7 @@ const getPoolData = async (poolID) => {
         return;
       }
 
-      token.reserves = Decimal(underlying_balances[i])
+      token.reserves = Decimal(balances[i])
         .dividedBy("1e" + token.decimals)
         .toString();
 
@@ -261,6 +267,7 @@ const getPoolData = async (poolID) => {
       swap_fee: swap_fee.toString(),
       decimals: decimals.toString(),
       amplification: amplification.toString(),
+      virtual_price: virtual_price.toString(),
       immutable: false,
       tokens: tokens,
     };
@@ -437,6 +444,7 @@ async function streamWorker(sync) {
         sequence: msgSequence,
         protocol: "CURVEFI",
         amplification: pair.amplification,
+        virtual_price: pair.virtual_price,
         swap_fee: pair.swap_fee,
         pool_id: poolID,
         block_number: pair.block_number,
