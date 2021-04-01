@@ -6,7 +6,7 @@
 
 # Disclosure
 
-Badger is under heavy development and lots of things might change in the future, feedbacks are welcome at mauro@zinnion.com or [`@slashdowntown`](https://twitter.com/slashdowntown)
+Badger is FREE to use but it is under heavy development and lots of things might change in the future, feedbacks are welcome at badger@zinnion.com or [`@BadgerOnchain`](https://twitter.com/BadgerOnchain).
 
 # Websocket
 
