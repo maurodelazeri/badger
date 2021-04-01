@@ -32,7 +32,7 @@ body {
     background: #ffffff !important;
   }
   .anchor span {
-    color: rgba(0,0,0,0.8);
+    color: rgba(0,0,0,0);
   }
   
   h1,h2,h3 {
