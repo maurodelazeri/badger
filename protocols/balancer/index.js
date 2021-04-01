@@ -420,6 +420,7 @@ async function streamWorker(sync) {
     const ticker = {
       type: "ticker",
       sequence: msgSequence,
+      chain: "Ethereum",
       protocol: "BALANCER",
       swap_fee: pair.swap_fee,
       pool_id: poolID,

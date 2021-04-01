@@ -445,6 +445,7 @@ async function streamWorker(sync) {
       const ticker = {
         type: "ticker",
         sequence: msgSequence,
+        chain: "Ethereum",
         protocol: "CURVEFI",
         amplification: pair.amplification,
         virtual_price: pair.virtual_price,

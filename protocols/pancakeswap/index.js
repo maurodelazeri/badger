@@ -430,7 +430,8 @@ async function streamWorker(sync) {
       const ticker = {
         type: "ticker",
         sequence: msgSequence,
-        protocol: "SUSHISWAP",
+        protocol: "PANCAKESWAP",
+        chain: "bsc",
         swap_fee: pair.swap_fee,
         pool_id: poolID,
         block_number: pair.block_number,

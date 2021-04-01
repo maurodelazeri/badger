@@ -492,6 +492,7 @@ async function streamWorker(sync) {
     const ticker = {
       type: "ticker",
       sequence: msgSequence,
+      chain: "Ethereum",
       protocol: "BANCOR",
       swap_fee: pair.swap_fee,
       pool_id: poolID,
