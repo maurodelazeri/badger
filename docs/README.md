@@ -29,8 +29,9 @@ Please go to the section [protocols](#Protocols) for more details and formulas f
 ## Channels 
 
 * *TICKERS*
+* *ETH_GAS*
 
-Return payload expected:
+Return payload expected for the channel `TICKERS`:
 
 ```json
 {
@@ -67,7 +68,24 @@ Return payload expected:
 }
 ````
 
+
 Messages are ordered in the same order as they occurred in the blocks, you can follow the field `sequence` to make sure you are not losing any message. The field `sequence` is incremental and `individial` **per protocol**, meaning, protocol `A` will have a different `sequence` than protocol `B`, the `sequence` also can eventually go back to `0`. You also can follow `blockNumber` that is the block that the transaction was mined.
+
+Return payload expected for the channel `ETH_GAS`:
+
+```json
+{
+   "health":true,
+   "block_number":12154262,
+   "slow":10.0,
+   "standard":184.8,
+   "fast":203.1,
+   "instant":226.0,
+   "block_time":13.417
+}
+```
+
+Slow, standard, fast and instant values represent minimal gas price of the latest 200 blocks. by default slow represents 30% probability, standard is 60%, fast is 90% and instant is 100%.
 
 ## Usage
 
@@ -188,7 +206,25 @@ Mainnet: `https://api.zinnion.com`
 - Bancor (Ethereum)
 - Curve (Ethereum)
 
-## Examples
+## Endpoints
+
+* Ethereum gas estimation `/v1/eth_gas`. Slow, standard, fast and instant values represent minimal gas price of the latest 200 blocks. by default slow represents 30% probability, standard is 60%, fast is 90% and instant is 100%.
+
+https://api.zinnion.com/v1/eth_gas
+
+Expected return:
+
+```json
+{
+   "health":true,
+   "block_number":12154262,
+   "slow":10.0,
+   "standard":184.8,
+   "fast":203.1,
+   "instant":226.0,
+   "block_time":13.417
+}
+```
 
 * All active pools in the last 24hs. `/v1/active-pools/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data.
 
