@@ -237,6 +237,8 @@ const getPoolData = async (poolID) => {
     tokens = [token0, token1];
 
     return {
+      chain: "ETHEREUM",
+      protocol: "SUSHISWAP",
       pool_id: poolID,
       symbol: symbol,
       name: name,
@@ -430,8 +432,8 @@ async function streamWorker(sync) {
       const ticker = {
         type: "ticker",
         sequence: msgSequence,
-        chain: "Ethereum",
-        protocol: "SUSHISWAP",
+        chain: pair.chain,
+        protocol: pair.protocol,
         swap_fee: pair.swap_fee,
         pool_id: poolID,
         block_number: pair.block_number,

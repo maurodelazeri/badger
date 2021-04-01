@@ -36,6 +36,7 @@ Return payload expected for the channel `TICKERS`:
 {
   type: 'ticker',
   sequence: 19,
+  chain: 'ETHEREUM',
   protocol: 'UNISWAPV2',
   swap_fee: '3000',
   pool_id: '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc',

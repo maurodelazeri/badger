@@ -264,6 +264,8 @@ const getPoolData = async (poolID) => {
     }
 
     return {
+      chain: "ETHEREUM",
+      protocol: "CURVEFI",
       pool_id: poolID,
       symbol: symbol,
       name: name,
@@ -445,8 +447,8 @@ async function streamWorker(sync) {
       const ticker = {
         type: "ticker",
         sequence: msgSequence,
-        chain: "Ethereum",
-        protocol: "CURVEFI",
+        chain: pair.chain,
+        protocol: pair.protocol,
         amplification: pair.amplification,
         virtual_price: pair.virtual_price,
         swap_fee: pair.swap_fee,

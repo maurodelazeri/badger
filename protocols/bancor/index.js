@@ -310,6 +310,8 @@ const getPoolData = async (poolID) => {
     }
 
     return {
+      chain: "ETHEREUM",
+      protocol: "BANCOR",
       pool_id: poolID,
       owner: owner,
       symbol: symbol,
@@ -492,8 +494,8 @@ async function streamWorker(sync) {
     const ticker = {
       type: "ticker",
       sequence: msgSequence,
-      chain: "Ethereum",
-      protocol: "BANCOR",
+      chain: pair.chain,
+      protocol: pair.protocol,
       swap_fee: pair.swap_fee,
       pool_id: poolID,
       block_number: pair.block_number,
