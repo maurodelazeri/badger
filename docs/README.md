@@ -749,6 +749,4 @@ Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
 }
  ```
 
-In this example we have tokens with different weights therefore, we need to use the formula described above.
-
 If you want to know how many `DAI` you will need to get `1` `USDC` you simply need to check the field `virtual_price`, in this case: `1.0149324070969434`
