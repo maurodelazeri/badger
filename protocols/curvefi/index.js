@@ -68,9 +68,9 @@ async function init(web3Obj) {
   await loadNonStandartsTokens();
 
   // const pair = await getPoolData("0x4ca9b3063ec5866a4b82e437059d2c43d1be596f");
-  const pair = await getPoolData("0xbebc44782c7db0a1a60cb6fe97d0b483032ff1c7");
-  console.log(pair);
-  process.exit();
+  // const pair = await getPoolData("0xdebf20617708857ebe4f679508e7b7863a8a8eee");
+  // console.log(pair);
+  // process.exit();
 
   // If we already have tokens in memory, lets save some time pre loading it
   const tokens = await loadListFromMemory("TOKENS");
@@ -129,37 +129,37 @@ async function init(web3Obj) {
   await populateSwapPools(0);
 
   // Shedulle pools check for every minute
-  // schedule.scheduleJob("* * * * *", function () {
-  //   console.log("[CURVEFI] Checking for new pools");
-  //   factoryContract.methods
-  //     .allPairsLength()
-  //     .call()
-  //     .then((allPairsLength) => {
-  //       if (totalPools != allPairsLength) {
-  //         const difference = allPairsLength - totalPools;
-  //         if (difference < 0) {
-  //           console.error(
-  //             "[CURVEFI] CURVEFI POOLS ARE INCONSISTENT:",
-  //             difference
-  //           );
-  //         } else {
-  //           console.log(
-  //             "[CURVEFI] New pools found:",
-  //             difference,
-  //             " starting from:",
-  //             totalPools
-  //           );
-  //           populateSwapPools(totalPools).then(() => {
-  //             console.log(
-  //               "[CURVEFI] New pools updated, new total is:" + totalPools
-  //             );
-  //           });
-  //         }
-  //       } else {
-  //         console.log("[CURVEFI] All pools are update:", totalPools);
-  //       }
-  //     });
-  // });
+  schedule.scheduleJob("* * * * *", function () {
+    console.log("[CURVEFI] Checking for new pools");
+    registryContract.methods
+      .pool_count()
+      .call()
+      .then((allPairsLength) => {
+        if (totalPools != allPairsLength) {
+          const difference = allPairsLength - totalPools;
+          if (difference < 0) {
+            console.error(
+              "[CURVEFI] CURVEFI POOLS ARE INCONSISTENT:",
+              difference
+            );
+          } else {
+            console.log(
+              "[CURVEFI] New pools found:",
+              difference,
+              " starting from:",
+              totalPools
+            );
+            populateSwapPools(totalPools).then(() => {
+              console.log(
+                "[CURVEFI] New pools updated, new total is:" + totalPools
+              );
+            });
+          }
+        } else {
+          console.log("[CURVEFI] All pools are update:", totalPools);
+        }
+      });
+  });
 }
 
 async function getTokenData(address) {
@@ -209,8 +209,6 @@ async function getTokenData(address) {
 
 const getPoolData = async (poolID) => {
   try {
-    const rates = await registryContract.methods.get_rates(poolID).call();
-
     const swap_fee =
       ((await registryContract.methods.get_fees(poolID).call())[0] / 1e10) *
       100;
@@ -260,7 +258,7 @@ const getPoolData = async (poolID) => {
         .dividedBy("1e" + token.decimals)
         .toString();
 
-      token.weight = (rates[i] / 1e18 / totalTokens).toString();
+      token.weight = (1 / totalTokens).toString();
 
       tokens.push(token);
     }
@@ -461,8 +459,6 @@ async function streamWorker(sync) {
         decimals: pair.decimals.toString(),
         tokens: pair.tokens,
       };
-
-      console.log(ticker);
 
       ZMQ.zmqSendMsg("TICKERS_CURVEFI", poolID, JSON.stringify(ticker));
 
