@@ -249,6 +249,8 @@ Expected return:
     "next_cursor": 256,
     "data": [
         {
+            "chain": "ETHEREUM",
+            "protocol": "UNISWAP",          
             "pool_id": "0x6c8b0dee9e90ea9f790da5daf6f5b20d23b39689",
             "symbol": "UNI-V2",
             "name": "Uniswap V2",
@@ -278,6 +280,8 @@ Expected return:
             ]
         },
         {
+            "chain": "ETHEREUM",
+            "protocol": "UNISWAP",          
             "pool_id": "0xc70bb2736e218861dca818d1e9f7a1930fe61e5b",
             "symbol": "UNI-V2",
             "name": "Uniswap V2",
@@ -327,6 +331,8 @@ Expected return:
     "next_cursor": 3072,
     "data": [
         {
+            "chain": "ETHEREUM",
+            "protocol": "UNISWAP",           
             "pool_id": "0x942be9e8a12cfaaf997cd266487eaf8553b119d2",
             "symbol": "UNI-V2",
             "name": "Uniswap V2",
@@ -353,6 +359,8 @@ Expected return:
             ]
         },
         {
+            "chain": "ETHEREUM",
+            "protocol": "UNISWAP",           
             "pool_id": "0x25c86f494f89c4f9058059b46d8d8d6548e7543b",
             "symbol": "UNI-V2",
             "name": "Uniswap V2",
@@ -395,6 +403,8 @@ Expected return:
     "message": "",
     "status": "success",
     "data": {
+        "chain": "ETHEREUM",
+        "protocol": "UNISWAP",       
         "pool_id": "0xff417643d4e98b52c7e894407dd23f8edd8167f0",
         "symbol": "UNI-V2",
         "name": "Uniswap V2",
