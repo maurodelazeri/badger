@@ -41,58 +41,53 @@ https://api.etherscan.io/api?module=logs&action=getLogs
 ### Juniper Config
 
 ```
-
-
-del firewall family inet filter protect-MD
-
 set firewall family inet filter protect-MD term private-term from source-prefix-list isprime-admins
-set firewall family inet filter protect-MD term private-term from protocol tcp 
-set firewall family inet filter protect-MD term private-term from destination-port 0-65535
-set firewall family inet filter protect-MD term private-term then accept 
-
-set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol tcp 
-set firewall family inet filter protect-MD term public-term from destination-port 443 
-set firewall family inet filter protect-MD term public-term then accept 
-
-set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol tcp 
-set firewall family inet filter protect-MD term public-term from destination-port 80 
-set firewall family inet filter protect-MD term public-term then accept 
-
-set firewall family inet filter protect-MD term public-term from destination-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol tcp 
-set firewall family inet filter protect-MD term public-term from destination-port 443 
-set firewall family inet filter protect-MD term public-term then accept 
-
-set firewall family inet filter protect-MD term public-term from destination-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol tcp 
-set firewall family inet filter protect-MD term public-term from destination-port 80 
-set firewall family inet filter protect-MD term public-term then accept 
-
-set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol tcp 
-set firewall family inet filter protect-MD term public-term from destination-port 30303 
-set firewall family inet filter protect-MD term public-term then accept 
-
-set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol tcp 
-set firewall family inet filter protect-MD term public-term from destination-port 30311 
-set firewall family inet filter protect-MD term public-term then accept 
-
-set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol udp 
-set firewall family inet filter protect-MD term public-term from destination-port 30303 
-set firewall family inet filter protect-MD term public-term then accept 
-
-set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
-set firewall family inet filter protect-MD term public-term from protocol udp 
-set firewall family inet filter protect-MD term public-term from destination-port 30311 
-set firewall family inet filter protect-MD term public-term then accept 
-
+set firewall family inet filter protect-MD term private-term then accept
+set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0
+set firewall family inet filter protect-MD term public-term from protocol tcp
+set firewall family inet filter protect-MD term public-term from protocol udp
+set firewall family inet filter protect-MD term public-term from destination-port 443
+set firewall family inet filter protect-MD term public-term from destination-port 80
+set firewall family inet filter protect-MD term public-term from destination-port 30303
+set firewall family inet filter protect-MD term public-term from destination-port 30311
+set firewall family inet filter protect-MD term public-term then accept
+set firewall family inet filter protect-MD term allow-ephermeral from source-address 0.0.0.0/0
+set firewall family inet filter protect-MD term allow-ephermeral from destination-port 32768-61000
 set firewall family inet filter protect-MD term discard-rest-term then discard
+```
 
-
-show firewall family inet filter protect-MD
-
+```
+filter protect-MD {
+    term private-term {
+        from {
+            source-prefix-list {
+                isprime-admins;
+            }
+        }
+        then accept;
+    }
+    term public-term {
+        from {
+            source-address {
+                0.0.0.0/0;
+            }
+            protocol [ tcp udp ];
+            destination-port [ 443 80 30303 30311 ];
+        }
+        then accept;
+    }                           
+    term allow-ephermeral {
+        from {
+            source-address {
+                0.0.0.0/0;
+            }
+            destination-port 32768-61000;
+        }
+    }
+    term discard-rest-term {
+        then {
+            discard;
+        }
+    }
+}
 ```
