@@ -198,24 +198,3 @@ services:
       options:
         max-size: "2m"
         max-file: "10"          
-
-  # badger_burgerswap:
-  #   image: zinnionlcc/node
-  #   hostname: badger_burgerswap
-  #   container_name: badger_burgerswap
-  #   restart: unless-stopped        
-  #   environment:
-  #     - MINIO_ACCESS_KEY=admin
-  #     - MINIO_SECRET_KEY=Br@sa154
-  #     - PKG=badger
-  #     - DEX=_burgerswap
-  #     - CHAIN=bsc 
-  #   depends_on:
-  #      - cheetah
-  #   command:
-  #     - start.sh
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "2m"
-  #       max-file: "10"        
