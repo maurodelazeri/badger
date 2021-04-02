@@ -3,9 +3,28 @@ version: "3"
 networks:
   default:
     external:
-      name: external-example
+      name: external-net
 
 services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    restart: unless-stopped
+    stop_signal: SIGINT
+    stop_grace_period: 2m
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+      - ./redis.conf:/redis.conf
+    command: ["redis-server", "/redis.conf"]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
   cheetah:
     image: zinnionlcc/cpp
     hostname: cheetah
@@ -22,25 +41,6 @@ services:
       - 31338:31338/tcp
     command:
       - start.sh
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "2m"
-        max-file: "10"
-        
-  badger_docs:
-    image: zinnionlcc/node
-    hostname: badger_docs
-    container_name: badger_docs
-    restart: unless-stopped
-    environment:
-      - MINIO_ACCESS_KEY=admin
-      - MINIO_SECRET_KEY=Br@sa154
-      - PKG=badger_docs
-    ports:
-      - 8080:8080/tcp
-    command:
-      - start_docs.sh
     logging:
       driver: "json-file"
       options:
@@ -70,7 +70,50 @@ services:
       options:
         max-size: "2m"
         max-file: "10"
-      
+
+  badger_docs:
+    image: zinnionlcc/node
+    hostname: badger_docs
+    container_name: badger_docs
+    restart: unless-stopped
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger_docs
+    ports:
+      - 8080:8080/tcp
+    command:
+      - start_docs.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  eth_gas_monitor:
+    image: zinnionlcc/python3
+    hostname: eth_gas_monitor
+    container_name: eth_gas_monitor
+    restart: unless-stopped
+    ports:
+      - 7777:7777/tcp
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=eth_gas_monitor
+      - ETH_RPC_URL=http://web3.zinnion.com:8545
+      - HTTP_PORT=7777
+      - ZQM_PUB_ADDR=tcp://cheetah.zinnion.com:31337
+    depends_on:
+       - cheetah      
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
   badger_uniswapv2:
     image: zinnionlcc/node
     hostname: badger_uniswapv2
@@ -198,3 +241,6 @@ services:
       options:
         max-size: "2m"
         max-file: "10"          
+
+volumes:
+  redis: {}          

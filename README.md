@@ -38,37 +38,61 @@ https://api.etherscan.io/api?module=logs&action=getLogs
 &apikey=JX8PEF335BBDSXWZ9AAC7KTVQ68USIY8X7
 
 
-### Iptables
+### Juniper Config
 
 ```
-iptables -P INPUT ACCEPT
-iptables -P FORWARD ACCEPT
-iptables -P OUTPUT ACCEPT
-iptables -t nat -F
-iptables -t mangle -F
-iptables -F
-iptables -X
 
-ip6tables -P INPUT ACCEPT
-ip6tables -P FORWARD ACCEPT
-ip6tables -P OUTPUT ACCEPT
-ip6tables -t nat -F
-ip6tables -t mangle -F
-ip6tables -F
-ip6tables -X
 
-iptables -N DOCKER
-iptables -N DOCKER-ISOLATION
-iptables -N DOCKER-USER
-iptables -I DOCKER-ISOLATION -j RETURN
-iptables -I DOCKER-USER -j RETURN
+del firewall family inet filter protect-MD
 
-iptables -A INPUT -p tcp -m tcp -m multiport --dports 80,443,22 -j ACCEPT
-iptables -A INPUT -m conntrack -j ACCEPT  --ctstate RELATED,ESTABLISHED
-iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A INPUT -j DROP
-iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A OUTPUT -j DROP
-iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -j DROP
+set firewall family inet filter protect-MD term private-term from source-prefix-list isprime-admins
+set firewall family inet filter protect-MD term private-term from protocol tcp 
+set firewall family inet filter protect-MD term private-term from destination-port 0-65535
+set firewall family inet filter protect-MD term private-term then accept 
+
+set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol tcp 
+set firewall family inet filter protect-MD term public-term from destination-port 443 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol tcp 
+set firewall family inet filter protect-MD term public-term from destination-port 80 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term public-term from destination-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol tcp 
+set firewall family inet filter protect-MD term public-term from destination-port 443 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term public-term from destination-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol tcp 
+set firewall family inet filter protect-MD term public-term from destination-port 80 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol tcp 
+set firewall family inet filter protect-MD term public-term from destination-port 30303 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol tcp 
+set firewall family inet filter protect-MD term public-term from destination-port 30311 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol udp 
+set firewall family inet filter protect-MD term public-term from destination-port 30303 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term public-term from source-address 0.0.0.0/0 
+set firewall family inet filter protect-MD term public-term from protocol udp 
+set firewall family inet filter protect-MD term public-term from destination-port 30311 
+set firewall family inet filter protect-MD term public-term then accept 
+
+set firewall family inet filter protect-MD term discard-rest-term then discard
+
+
+show firewall family inet filter protect-MD
+
 ```
