@@ -71,16 +71,16 @@ services:
         max-size: "2m"
         max-file: "10"
       
-  badger_uniswap_v2:
+  badger_uniswapv2:
     image: zinnionlcc/node
-    hostname: badger_uniswap_v2
-    container_name: badger_uniswap_v2
+    hostname: badger_uniswapv2
+    container_name: badger_uniswapv2
     restart: unless-stopped
     environment:
       - MINIO_ACCESS_KEY=admin
       - MINIO_SECRET_KEY=Br@sa154
       - PKG=badger
-      - DEX=uniswap_v2
+      - DEX=uniswapv2
     depends_on:
        - cheetah
     command:
@@ -173,3 +173,42 @@ services:
         max-size: "2m"
         max-file: "10"  
         
+  badger_pancakeswap:
+    image: zinnionlcc/node
+    hostname: badger_pancakeswap
+    container_name: badger_pancakeswap
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=pancakeswap
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"          
+
+  # badger_burgerswap:
+  #   image: zinnionlcc/node
+  #   hostname: badger_burgerswap
+  #   container_name: badger_burgerswap
+  #   restart: unless-stopped        
+  #   environment:
+  #     - MINIO_ACCESS_KEY=admin
+  #     - MINIO_SECRET_KEY=Br@sa154
+  #     - PKG=badger
+  #     - DEX=_burgerswap
+  #   depends_on:
+  #      - cheetah
+  #   command:
+  #     - start.sh
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "2m"
+  #       max-file: "10"        

@@ -10,13 +10,7 @@ const { init: InitSushiSwap } = require("./protocols/sushiswap/");
 const { init: InitBalancer } = require("./protocols/balancer/");
 const { init: InitBancor } = require("./protocols/bancor/");
 const { init: InitCurveFi } = require("./protocols/curvefi/");
-
-const local = {
-  ip: config.systemconfig.web3.HOST,
-  port: config.systemconfig.web3.PORT,
-};
-const ip = local.ip;
-const port = local.port;
+const { init: InitPancakeswap } = require("./protocols/pancakeswap/");
 
 try {
   var options = {
@@ -35,17 +29,36 @@ try {
     },
   };
 
-  web3 = new Web3(
-    new Web3.providers.WebsocketProvider(`ws://${ip}:${port}`, options)
-  );
+  if (process.env.CHAIN === "ethereum") {
+    web3 = new Web3(
+      new Web3.providers.WebsocketProvider(
+        `${config.systemconfig.web3_eth.PROTOCOL}://${config.systemconfig.web3_eth.HOST}:${config.systemconfig.web3_eth.PORT}`,
+        options
+      )
+    );
+    console.log(
+      `[BAGDER] Connected successfully to ${config.systemconfig.web3_eth.PROTOCOL}://${config.systemconfig.web3_eth.HOST}:${config.systemconfig.web3_eth.PORT}!`
+    );
+  } else if (process.env.CHAIN === "bsc") {
+    web3 = new Web3(
+      new Web3.providers.WebsocketProvider(
+        `${config.systemconfig.web3_bsc.PROTOCOL}://${config.systemconfig.web3_bsc.HOST}:${config.systemconfig.web3_bsc.PORT}`,
+        options
+      )
+    );
+    console.log(
+      `[BAGDER] Connected successfully to ${config.systemconfig.web3_bsc.PROTOCOL}://${config.systemconfig.web3_bsc.HOST}:${config.systemconfig.web3_bsc.PORT}!`
+    );
+  } else {
+    console.log("Please set the env CHAIN");
+    process.exit(1);
+  }
 
   //const checkConnectionPromise = connection.checkConnection(ip, port);
   const args = process.argv;
 
-  console.log(`[BAGDER] Connected successfully to ws://${ip}:${port} !`);
-
   switch (args[2]) {
-    case "uniswap_v2":
+    case "uniswapv2":
       InitUniSwapV2(web3);
       break;
     case "sushiswap":
@@ -59,6 +72,9 @@ try {
       break;
     case "curvefi":
       InitCurveFi(web3);
+      break;
+    case "pancakeswap":
+      InitPancakeswap(web3);
       break;
     default:
       console.log("[PLEASE SELECT THE TARGEG: ex: uniswap]");

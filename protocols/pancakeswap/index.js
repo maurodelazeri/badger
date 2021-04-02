@@ -7,9 +7,9 @@ const moment = require("moment");
 const schedule = require("node-schedule");
 const cliProgress = require("cli-progress");
 const factoryABI = JSON.parse(
-  fs.readFileSync("./abi/sushiswapFactoryABI.json")
+  fs.readFileSync("./abi/pancakeswapFactoryABI.json")
 );
-const poolABI = JSON.parse(fs.readFileSync("./abi/sushiswapPoolABI.json"));
+const poolABI = JSON.parse(fs.readFileSync("./abi/pancakeswapPoolABI.json"));
 const ERC20ABI = JSON.parse(fs.readFileSync("./abi/ERC20ABI.json"));
 const ERC20Bytes32ABI = JSON.parse(
   fs.readFileSync("./abi/ERC20Bytes32ABI.json")
@@ -33,11 +33,11 @@ const pool_pairs_map = new Map(); // Used when live
 const tokens_map = new Map(); // Used all the time to minimize request to static data
 const nonStandartToken = new Map(); // Used all time time since we have a couple non standart erc20
 
-const SUSHISWAP_FACTORY = "0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac"; // mainnet and testnet
+const PANCAKESWAP_FACTORY = "0xbcfccbde45ce874adcb698cc183debcf17952812"; // mainnet
 
 async function init(web3Obj) {
   web3 = web3Obj;
-  factoryContract = new web3.eth.Contract(factoryABI, SUSHISWAP_FACTORY);
+  factoryContract = new web3.eth.Contract(factoryABI, PANCAKESWAP_FACTORY);
 
   redisClient = await Redis.redisClient();
 
@@ -73,17 +73,17 @@ async function init(web3Obj) {
       });
     };
     await loadTokens();
-    console.error("[SUSHISWAP]", tokens_map.size, "pre loaded tokens");
+    console.error("[PANCAKESWAP]", tokens_map.size, "pre loaded tokens");
   }
 
-  console.log("[SUSHISWAP] Loading Pools and Pairs");
-  const pools = await loadListFromMemory("POOLS:SUSHISWAP");
+  console.log("[PANCAKESWAP] Loading Pools and Pairs");
+  const pools = await loadListFromMemory("POOLS:PANCAKESWAP");
 
   if (!pools) {
-    console.error("[SUSHISWAP] No pools in memory, loading it...");
+    console.error("[PANCAKESWAP] No pools in memory, loading it...");
     await populateSwapPools(0);
     console.error(
-      "[SUSHISWAP] All pools are loaded, exiting and starting again..."
+      "[PANCAKESWAP] All pools are loaded, exiting and starting again..."
     );
     process.exit();
   }
@@ -98,7 +98,10 @@ async function init(web3Obj) {
         }
         resolve();
       } catch (error) {
-        console.error("[SUSHISWAP] loadMaps", error.name + ":" + error.message);
+        console.error(
+          "[PANCAKESWAP] loadMaps",
+          error.name + ":" + error.message
+        );
         process.exit();
       }
     });
@@ -110,14 +113,14 @@ async function init(web3Obj) {
 
   swapWatcher();
 
-  console.log("[SUSHISWAP] Started", totalPools, "pools");
+  console.log("[PANCAKESWAP] Started", totalPools, "pools");
 
   // Lazy Load
   await populateSwapPools(0);
 
   // Shedulle pools check for every minute
   schedule.scheduleJob("* * * * *", function () {
-    console.log("[SUSHISWAP] Checking for new pools");
+    console.log("[PANCAKESWAP] Checking for new pools");
     factoryContract.methods
       .allPairsLength()
       .call()
@@ -126,24 +129,24 @@ async function init(web3Obj) {
           const difference = allPairsLength - totalPools;
           if (difference < 0) {
             console.error(
-              "[SUSHISWAP] SUSHISWAP POOLS ARE INCONSISTENT:",
+              "[PANCAKESWAP] PANCAKESWAP POOLS ARE INCONSISTENT:",
               difference
             );
           } else {
             console.log(
-              "[SUSHISWAP] New pools found:",
+              "[PANCAKESWAP] New pools found:",
               difference,
               " starting from:",
               totalPools
             );
             populateSwapPools(totalPools).then(() => {
               console.log(
-                "[SUSHISWAP] New pools updated, new total is:" + totalPools
+                "[PANCAKESWAP] New pools updated, new total is:" + totalPools
               );
             });
           }
         } else {
-          console.log("[SUSHISWAP] All pools are update:", totalPools);
+          console.log("[PANCAKESWAP] All pools are update:", totalPools);
         }
       });
   });
@@ -213,14 +216,14 @@ const getPoolData = async (poolID) => {
     const token0 = await getTokenData(token0Addr);
     if (token0 === null) {
       fs.appendFileSync("tokens0.txt", token0Addr + "\n");
-      console.error("[SUSHISWAP] Token not found:", token0Addr);
+      console.error("[PANCAKESWAP] Token not found:", token0Addr);
       return;
     }
 
     const token1 = await getTokenData(token1Addr);
     if (token1 === null) {
       fs.appendFileSync("tokens1.txt", token1Addr + "\n");
-      console.error("[SUSHISWAP] Token not found:", token1Addr);
+      console.error("[PANCAKESWAP] Token not found:", token1Addr);
       return;
     }
 
@@ -248,7 +251,10 @@ const getPoolData = async (poolID) => {
       tokens: tokens,
     };
   } catch (error) {
-    console.error("[SUSHISWAP] getPoolData", error.name + ":" + error.message);
+    console.error(
+      "[PANCAKESWAP] getPoolData",
+      error.name + ":" + error.message
+    );
   }
 };
 
@@ -262,7 +268,7 @@ const loadListFromMemory = async (hash) => {
     });
   } catch (error) {
     console.error(
-      "[SUSHISWAP] loadListFromMemory",
+      "[PANCAKESWAP] loadListFromMemory",
       error.name + ":" + error.message
     );
   }
@@ -273,7 +279,7 @@ async function populateSwapPools(beginPoolIndex) {
     // create new progress bar
     const bar1 = new cliProgress.SingleBar({
       format:
-        "[SUSHISWAP] Loading Pools |" +
+        "[PANCAKESWAP] Loading Pools |" +
         _colors.cyan("{bar}") +
         "| {percentage}% || {value}/{total} Pools",
       barCompleteChar: "\u2588",
@@ -303,11 +309,11 @@ async function populateSwapPools(beginPoolIndex) {
       const pair = await getPoolData(poolID);
 
       if (!pair) {
-        console.info("[SUSHISWAP] Problem creating a pair for pool", poolID);
+        console.info("[PANCAKESWAP] Problem creating a pair for pool", poolID);
         continue;
       }
 
-      await redisClient.hset("POOLS:SUSHISWAP", poolID, JSON.stringify(pair));
+      await redisClient.hset("POOLS:PANCAKESWAP", poolID, JSON.stringify(pair));
 
       if (pair.tokens.length > 1) {
         if (
@@ -349,7 +355,7 @@ async function populateSwapPools(beginPoolIndex) {
     return allPairsLength;
   } catch (error) {
     console.error(
-      "[SUSHISWAP] populateSwapPools",
+      "[PANCAKESWAP] populateSwapPools",
       error.name + ":" + error.message
     );
   }
@@ -359,14 +365,17 @@ const createNewPool = async (poolID) => {
   // We expect to know beforehand all pools that belongs to sushi swap, this could be a false
   // positive while loading all pools on populateSwapPools only, but should fix itself
   if (!pool_pairs_map.has(poolID)) {
-    console.info("[SUSHISWAP] Not a sushi poll", poolID + "\n");
+    console.info("[PANCAKESWAP] Not a sushi poll", poolID + "\n");
     return false;
   }
 
   const pair = await getPoolData(poolID);
   if (!pair) {
     bancor_not_valid.set(poolID, true);
-    console.info("[SUSHISWAP] Problem creating a pair for pool", poolID + "\n");
+    console.info(
+      "[PANCAKESWAP] Problem creating a pair for pool",
+      poolID + "\n"
+    );
     return false;
   }
 
@@ -376,7 +385,7 @@ const createNewPool = async (poolID) => {
 
   pool_pairs_map.set(poolID, pair);
 
-  await redisClient.hset("POOLS:SUSHISWAP", poolID, JSON.stringify(pair));
+  await redisClient.hset("POOLS:PANCAKESWAP", poolID, JSON.stringify(pair));
 
   if (pair.tokens.length > 1) {
     if (
@@ -446,12 +455,17 @@ async function streamWorker(sync) {
         tokens: pair.tokens,
       };
 
-      ZMQ.zmqSendMsg("TICKERS_SUSHISWAP", poolID, JSON.stringify(ticker));
+      console.log(ticker);
 
-      await redisClient.hset("POOLS:SUSHISWAP", poolID, JSON.stringify(pair));
+      ZMQ.zmqSendMsg("TICKERS_PANCAKESWAP", poolID, JSON.stringify(ticker));
 
-      await redisClient.set("ACTIVE:SUSHISWAP:" + poolID, JSON.stringify(pair));
-      await redisClient.expire("ACTIVE:SUSHISWAP:" + poolID, 86400);
+      await redisClient.hset("POOLS:PANCAKESWAP", poolID, JSON.stringify(pair));
+
+      await redisClient.set(
+        "ACTIVE:PANCAKESWAP:" + poolID,
+        JSON.stringify(pair)
+      );
+      await redisClient.expire("ACTIVE:PANCAKESWAP:" + poolID, 86400);
 
       msgSequence++;
     } else {
@@ -460,7 +474,10 @@ async function streamWorker(sync) {
     }
     return true;
   } catch (error) {
-    console.error("[SUSHISWAP] streamWorker", error.name + ":" + error.message);
+    console.error(
+      "[PANCAKESWAP] streamWorker",
+      error.name + ":" + error.message
+    );
   }
 }
 
@@ -475,7 +492,7 @@ const swapWatcher = async () => {
     })
     .on("connected", async () => {
       console.log(
-        "[SUSHISWAP] Connected to Ethereum: Listening for syncs on CHAIN ID:" +
+        "[PANCAKESWAP] Connected to Binance Smart Chain: Listening for syncs on CHAIN ID:" +
           chainId
       );
     })
@@ -483,7 +500,7 @@ const swapWatcher = async () => {
       streamQueue.push(sync);
     })
     .on("error", async (error) => {
-      console.log("[SUSHISWAP]" + error);
+      console.log("[PANCAKESWAP]" + error);
     });
 };
 
