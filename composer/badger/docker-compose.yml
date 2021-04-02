@@ -81,6 +81,7 @@ services:
       - MINIO_SECRET_KEY=Br@sa154
       - PKG=badger
       - DEX=uniswapv2
+      - CHAIN=ethereum
     depends_on:
        - cheetah
     command:
@@ -102,6 +103,7 @@ services:
       - MINIO_SECRET_KEY=Br@sa154
       - PKG=badger
       - DEX=sushiswap
+      - CHAIN=ethereum
     depends_on:
        - cheetah
     command:
@@ -123,6 +125,7 @@ services:
       - MINIO_SECRET_KEY=Br@sa154
       - PKG=badger
       - DEX=balancer
+      - CHAIN=ethereum
     depends_on:
        - cheetah
     command:
@@ -143,6 +146,7 @@ services:
       - MINIO_SECRET_KEY=Br@sa154
       - PKG=badger
       - DEX=bancor
+      - CHAIN=ethereum
     depends_on:
        - cheetah
     command:
@@ -163,6 +167,7 @@ services:
       - MINIO_SECRET_KEY=Br@sa154
       - PKG=badger
       - DEX=curvefi
+      - CHAIN=ethereum
     depends_on:
        - cheetah
     command:
@@ -183,6 +188,7 @@ services:
       - MINIO_SECRET_KEY=Br@sa154
       - PKG=badger
       - DEX=pancakeswap
+      - CHAIN=bsc
     depends_on:
        - cheetah
     command:
@@ -203,6 +209,7 @@ services:
   #     - MINIO_SECRET_KEY=Br@sa154
   #     - PKG=badger
   #     - DEX=_burgerswap
+  #     - CHAIN=bsc 
   #   depends_on:
   #      - cheetah
   #   command:
