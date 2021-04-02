@@ -32,9 +32,9 @@ body {
     background: #ffffff !important;
   }
   .anchor span {
-    color: rgba(0,0,0,0);
+    color: rgb(0, 0, 0);
   }
-  
+
   h1,h2,h3 {
     font-weight: 900 !important;
   }
