@@ -17,7 +17,8 @@ var options = {
 };
 
 web3 = new Web3(
-  new Web3.providers.WebsocketProvider(`ws://wss.zinnion.com:8585`, options)
+  //new Web3.providers.WebsocketProvider(`ws://wss.zinnion.com:8585`, options)
+  new Web3.providers.WebsocketProvider(`ws://bsc.zinnion.com:8547`, options)
 );
 
 const bancor = async () => {
@@ -44,10 +45,21 @@ const balancer = async () => {
   return block;
 };
 
+const pancakeswap = async () => {
+  const block = await web3.eth.getPastLogs({
+    fromBlock: 9569113 - 1000,
+    toBlock: 9569113 + 1000,
+    address: "0x9424b1412450d0f8fc2255faf6046b98213b76bd",
+    topics: [
+      "0x8ccec77b0cb63ac2cafd0f5de8cdfadab91ce656d262240ba8a6343bccc5f945",
+    ],
+  });
+  return block;
+};
+
 (async () => {
   try {
-    const data = await bancor();
-    //console.log(data[0]);
+    const data = await pancakeswap();
     console.log(data);
   } catch (err) {
     console.error(err);

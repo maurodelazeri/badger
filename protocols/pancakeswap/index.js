@@ -33,6 +33,8 @@ const pool_pairs_map = new Map(); // Used when live
 const tokens_map = new Map(); // Used all the time to minimize request to static data
 const nonStandartToken = new Map(); // Used all time time since we have a couple non standart erc20
 
+// ROUTER
+// 0x05ff2b0db69458a0750badebc4f9e13add608c7f
 const PANCAKESWAP_FACTORY = "0xbcfccbde45ce874adcb698cc183debcf17952812"; // mainnet
 
 async function init(web3Obj) {
