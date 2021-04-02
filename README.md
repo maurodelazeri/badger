@@ -19,9 +19,13 @@ docsify serve docs
 http-server docs/
 ```
 
-### Get ABI
+### Get ABI Ethereum
 
 https://api.etherscan.io/api?module=contract&action=getabi&address=0x7d86446ddb609ed0f5f8684acf30380a356b2b4c&apikey=JX8PEF335BBDSXWZ9AAC7KTVQ68USIY8X7
+
+### Get ABI Binance Chain
+
+https://api.bscscan.com/api?module=contract&action=getabi&address=0xbeecd2ade82e1ab5e040acdf574f4a677e832092&apikey=CBPK3ZUYFHYANZ9SIF66GGZPB6ZB4X62VW
 
 
 ### Balancer first pools
