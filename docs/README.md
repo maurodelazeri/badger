@@ -8,6 +8,8 @@
 
 Badger is FREE to use but it is under heavy development and lots of things might change in the future, feedbacks are welcome at badger@zinnion.com or [`@BadgerOnchain`](https://twitter.com/BadgerOnchain).
 
+Please [`Signup`](https://cdn.forms-content.sg-form.com/1c0bd37b-93bb-11eb-a7c5-72c5be34cbc1) if you want to get the latest updates on what's to come, we usually send you 1 email per month.
+
 # Websocket
 
 ## Ticker
