@@ -14,7 +14,7 @@ const ERC20ABI = JSON.parse(fs.readFileSync("./abi/ERC20ABI.json"));
 const ERC20Bytes32ABI = JSON.parse(
   fs.readFileSync("./abi/ERC20Bytes32ABI.json")
 );
-const { nonStandartERC20ABI } = require("../../tokens/no_standarized_erc20");
+const { nonStandartBEP20ABI } = require("../../tokens/no_standarized_bep20");
 const Redis = require("../../libs/redis");
 const Utils = require("../../libs/utility");
 const ZMQ = require("../../libs/zmq");
@@ -45,10 +45,10 @@ async function init(web3Obj) {
 
   const loadNonStandartsTokens = () => {
     return new Promise((resolve) => {
-      for (var i = 0; i < nonStandartERC20ABI.length; i++) {
+      for (var i = 0; i < nonStandartBEP20ABI.length; i++) {
         nonStandartToken.set(
-          nonStandartERC20ABI[i].address.toLowerCase(),
-          nonStandartERC20ABI[i]
+          nonStandartBEP20ABI[i].address.toLowerCase(),
+          nonStandartBEP20ABI[i]
         );
       }
       resolve();
@@ -173,6 +173,7 @@ async function getTokenData(address) {
     const symbol = await token.methods.symbol().call();
     const decimals = await token.methods.decimals().call();
     return {
+      chain: "BSC",
       address: address,
       name: name,
       symbol: symbol,
@@ -188,6 +189,7 @@ async function getTokenData(address) {
       );
       const decimals = await token.methods.decimals().call();
       return {
+        chain: "BSC",
         address: address,
         name: name,
         symbol: symbol,
@@ -456,8 +458,6 @@ async function streamWorker(sync) {
         decimals: pair.decimals.toString(),
         tokens: pair.tokens,
       };
-
-      console.log(ticker);
 
       ZMQ.zmqSendMsg("TICKERS_PANCAKESWAP", poolID, JSON.stringify(ticker));
 

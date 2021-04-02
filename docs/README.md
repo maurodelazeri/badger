@@ -25,6 +25,7 @@ Please go to the section [protocols](#Protocols) for more details and formulas f
 - Balancer (Ethereum)
 - Bancor (Ethereum)
 - Curve (Ethereum)
+- Pancakeswap (Binance Smart Chain)
 
 ## Channels 
 
@@ -207,6 +208,7 @@ Mainnet: `https://api.zinnion.com`
 - Balancer (Ethereum)
 - Bancor (Ethereum)
 - Curve (Ethereum)
+- Pancakeswap (Binance Smart Chain)
 
 ## Endpoints
 
@@ -519,6 +521,7 @@ Ex: take the following example to calculate the `Spot Price` of `USDC/WETH`
         "decimals": "18",
         "tokens": [
             {
+                "chain": "ETHEREUM",
                 "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
                 "name": "USD Coin",
                 "symbol": "USDC",
@@ -527,6 +530,7 @@ Ex: take the following example to calculate the `Spot Price` of `USDC/WETH`
                 "reserves": "133797118.16274"
             },
             {
+                "chain": "ETHEREUM",              
                 "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
                 "name": "Wrapped Ether",
                 "symbol": "WETH",
@@ -578,6 +582,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
    "immutable":true,
    "tokens":[
       {
+         "chain": "ETHEREUM",
          "address":"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
          "name":"Wrapped BTC",
          "symbol":"WBTC",
@@ -586,6 +591,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
          "reserves":"40.38350578"
       },
       {
+         "chain": "ETHEREUM",
          "address":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
          "name":"Wrapped Ether",
          "symbol":"WETH",
@@ -594,6 +600,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
          "reserves":"1170.6801725531202697"
       },
       {
+         "chain": "ETHEREUM",
          "address":"0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
          "name":"Aave Token",
          "symbol":"AAVE",
@@ -602,6 +609,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
          "reserves":"3224.3589949021246643"
       },
       {
+         "chain": "ETHEREUM",
          "address":"0x514910771af9ca656af840dff83e8264ecf986ca",
          "name":"ChainLink Token",
          "symbol":"LINK",
@@ -609,7 +617,8 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
          "weight":"10",
          "reserves":"31767.323732847287505"
       },
-      {
+      { 
+         "chain": "ETHEREUM",
          "address":"0x408e41876cccdc0f92210600ef50372656052a38",
          "name":"Republic Token",
          "symbol":"REN",
@@ -618,6 +627,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
          "reserves":"872398.81243314316767"
       },
       {
+         "chain": "ETHEREUM",
          "address":"0xba11d00c5f74255f56a5e366f4f77f5a186d7f55",
          "name":"BandToken",
          "symbol":"BAND",
@@ -626,6 +636,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
          "reserves":"65654.198251990405829"
       },
       {
+         "chain": "ETHEREUM",
          "address":"0xba100000625a3754423978a60c9317c58a424e3d",
          "name":"Balancer",
          "symbol":"BAL",
@@ -687,6 +698,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
   "decimals": "18",
   "tokens": [
     {
+      "chain": "ETHEREUM", 
       "address": "0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c",
       "name": "Bancor Network Token",
       "symbol": "BNT",
@@ -695,6 +707,7 @@ Ex: take the following example to calculate the `Spot Price` of `WBTC/WETH`
       "reserves": "146082.49365480128013"
     },
     {
+      "chain": "ETHEREUM", 
       "address": "0x99295f1141d58a99e939f7be6bbe734916a875b8",
       "name": "LinkPool",
       "symbol": "LPL",
@@ -744,6 +757,7 @@ Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
   immutable: false,
   tokens: [
     {
+      chain: 'ETHEREUM',
       address: '0x6b175474e89094c44da98b954eedeac495271d0f',
       name: 'Dai Stablecoin',
       symbol: 'DAI',
@@ -752,6 +766,7 @@ Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
       weight: '0.3333333333333333'
     },
     {
+      chain: 'ETHEREUM',
       address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       name: 'USD Coin',
       symbol: 'USDC',
@@ -760,6 +775,7 @@ Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
       weight: '0.3333333333333333'
     },
     {
+      chain: 'ETHEREUM',
       address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       name: 'Tether USD',
       symbol: 'USDT',

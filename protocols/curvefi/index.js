@@ -181,6 +181,7 @@ async function getTokenData(address) {
     const symbol = await token.methods.symbol().call();
     const decimals = await token.methods.decimals().call();
     return {
+      chain: "ETHEREUM",
       address: address,
       name: name,
       symbol: symbol,
