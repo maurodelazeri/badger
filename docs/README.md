@@ -797,3 +797,10 @@ Ex: take the following example to calculate the `Spot Price` of `DAI/USDC`
  ```
 
 If you want to know how many `DAI` you will need to get `1` `USDC` you simply need to check the field `virtual_price`, in this case: `1.0149324070969434`
+
+# Rates Limits
+
+We are imposing a two-stage rate limiting of 5 requests per second (r/s). The configuration allows bursts of up to 12 requests, the first 8 of which are processed without delay. A delay is added after 8 excessive requests to enforce the 5 r/s limit. After 12 excessive requests, any further requests are rejected.
+The delay parameter defines the point at which, within the burst size, excessive requests are throttled (delayed) to comply with the defined rate limit. With this configuration in place, a client that makes a continuous stream of requests at 8 r/s experiences the following behavior.
+
+![badger](_media/two-stage-rate-limiting-example.png)
