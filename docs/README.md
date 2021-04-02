@@ -14,8 +14,8 @@ Badger is FREE to use but it is under heavy development and lots of things might
 
 WebSocket endpoint provides real-time market data streaming which works in Subscribe-Publish communication model. After establishing a WebSocket connection with us, you will need to send a message with the channels you want to subscribe.
 
-The fields `reserves` are calculated in real time every time that a new transaction is confirmed in the blockchain. To find a price-independent measure to understand pool size, growth, and transaction volume, we need to look at the trading formula at its heart in each of the protocols. For instnace Uniswap V2 depends on the "constant product" principle to govern trading — that is the product of the two liquidity pools should be the same after a trade as before (excluding fees). The Uniswap V2 price is given by the ratio of the two liquidity pools. The constant product is therefore price-independent.
-While in Uniswap V2 the pools have weights equaly balanced, in Balancer it uses [`formula`](https://balancer.finance/whitepaper/#spot-price) where the spot price relies on `weights` associated to each token. 
+The fields `reserves` are calculated in real time every time that a new transaction is confirmed in the blockchain. To find a price-independent measure to understand pool size, growth, and transaction volume, we need to look at the trading formula at its heart in each of the protocols. For instance Uniswap V2 uses the "constant product" principle to govern trading — that is the product of the two liquidity pools should be the same after a trade as before (excluding fees). The Uniswap V2 price is given by the ratio of the two liquidity pools. The constant product is therefore price-independent.
+While in Uniswap V2 the pools have weights equaly balanced, Balancer uses a [`formula`](https://balancer.finance/whitepaper/#spot-price) where the spot price relies on `weights` associated to each token. 
 
 Please go to the section [protocols](#Protocols) for more details and formulas for each of the supported protocols.
 
@@ -295,6 +295,7 @@ Expected return:
             "processed_timestamp": 1616629428,
             "tokens": [
                 {
+                    "chain": "ETHEREUM",
                     "address": "0xadb2437e6f65682b85f814fbc12fec0508a7b1d0",
                     "name": "UniCrypt",
                     "symbol": "UNCX",
@@ -303,6 +304,7 @@ Expected return:
                     "reserves": "2174.517116326555570021"
                 },
                 {
+                    "chain": "ETHEREUM",
                     "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
                     "name": "Wrapped Ether",
                     "symbol": "WETH",
@@ -343,6 +345,7 @@ Expected return:
             "decimals": "18",
             "tokens": [
                 {
+                    "chain": "ETHEREUM",
                     "address": "0xc00e94cb662c3520282e6f5717214004a7f26888",
                     "name": "Compound",
                     "symbol": "COMP",
@@ -351,6 +354,7 @@ Expected return:
                     "reserves": "0.007955374525097932"
                 },
                 {
+                    "chain": "ETHEREUM",
                     "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
                     "name": "Tether USD",
                     "symbol": "USDT",
@@ -370,7 +374,8 @@ Expected return:
             "immutable": true,
             "decimals": "18",
             "tokens": [
-                {
+                {   
+                    "chain": "ETHEREUM",
                     "address": "0x86dd3a97038340c1869b996e378ed27608c50eca",
                     "name": "MedXProtocol",
                     "symbol": "MEDX",
@@ -379,6 +384,7 @@ Expected return:
                     "reserves": "2.07519e-13"
                 },
                 {
+                    "chain": "ETHEREUM",
                     "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
                     "name": "Wrapped Ether",
                     "symbol": "WETH",
@@ -415,6 +421,7 @@ Expected return:
         "decimals": "18",
         "tokens": [
             {
+                "chain": "ETHEREUM",
                 "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
                 "name": "Wrapped Ether",
                 "symbol": "WETH",
@@ -423,6 +430,7 @@ Expected return:
                 "reserves": "0.001203434308164567"
             },
             {
+                "chain": "ETHEREUM",
                 "address": "0xeead064eeee161126c99dcdc7c860f25f42772be",
                 "name": "Processed YFarmLand Token",
                 "symbol": "pYFARMER",
@@ -449,6 +457,7 @@ Expected return:
 {
     "message": "",
     "data": {
+        "chain": "ETHEREUM",
         "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
         "name": "Wrapped Ether",
         "symbol": "WETH",
@@ -468,7 +477,7 @@ Most of Automated Market Makers (AMMs) implement the `Constant Product` formula 
 
 ## Pool Lifecycle
 
-Some protocols have dynamic pools where the tokens and weights composition can change over time. Badger uses the field `immutable` as `true` to indicate whether the pool can change tokens and weights and `false` if the fields are immutable. Pools where the `immutable` is set to false won't be showing the `swap_fee`, `weights` and `reserves`
+Some protocols have dynamic pools where the tokens and weights composition can change over time. Badger uses the field `immutable` as `true` to indicate whether the pool can change tokens and weights and `false` if the fields are immutable. 
 
 ## Impermanent Loss
 
