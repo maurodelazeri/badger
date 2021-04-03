@@ -10,6 +10,12 @@ Badger is FREE to use but it is under heavy development and lots of things might
 
 Please [`Signup`](https://cdn.forms-content.sg-form.com/1c0bd37b-93bb-11eb-a7c5-72c5be34cbc1) if you want to get the latest updates on what's to come, we usually send you 1 email per month.
 
+# Architecture
+
+Badger is a stateless app, all data is carried in memory and cache and it is loaded straight from the blockchain. Each protocol has its own contract architecture and the way the tokens are managed is different in most cases. What the badger does is, for each protocol we have a service that observes the events of the contracts every time a that new block is confirmed. 
+Based on the type of event, we trigger a new message, for example, The message `TICKER` is triggered if there are changes in the `reserves` or `weights` in a pool, since it will necessarly affect the current `Spot Price` of the tokens in that pool. More details about how the spot price can be calculated can be found [here](#ticker-calculation) 
+
+
 # Websocket
 
 ## Ticker
