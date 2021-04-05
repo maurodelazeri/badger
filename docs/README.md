@@ -12,7 +12,7 @@ Please [`Signup`](https://cdn.forms-content.sg-form.com/1c0bd37b-93bb-11eb-a7c5-
 
 # Architecture
 
-Badger is a stateless app, all data is carried in memory and cache and it is loaded straight from the blockchain. Each protocol has its own contract architecture and the way the tokens are managed is different in most cases. What the badger does is, for each protocol we have a service that observes the events of the contracts every time a that new block is confirmed. 
+Badger is a stateless app, all data is carried in memory and cache and it is loaded straight from the blockchain. Each protocol has its own contract architecture and the way the tokens are managed is different in most cases. What the badger does is, for each protocol we have a service that observes the events of the contracts every time that new block is confirmed. 
 Based on the type of event, we trigger a new message, for example, the message with type `TICKER` is triggered if there are changes in the `reserves` or `weights` in a pool, since it will necessarly affect the current `Spot Price` of the tokens in that pool. More details about how the spot price can be calculated can be found [here](#ticker-calculation) 
 
 
@@ -204,6 +204,50 @@ func main() {
 	}
 }
 ```
+
+### C++
+
+```c++
+#include <libwebsockets.h>
+#include "src/libs/callback.h"
+#include "src/libs/websocket_client.h"
+
+// ** Full client can be found at https://github.com/maurodelazeri/websocket-client ** //
+
+class websocket : public websocket_client, public client_callback_t {
+    bool run_ = true;
+public:
+    websocket() : websocket_client(this, "wss.zinnion.com") {}
+
+    [[nodiscard]] bool working() const noexcept { return run_; }
+
+    void on_connected() override {
+        lwsl_user("client connected\n");
+        std::string msg = R"({ "type": "subscribe", "channels": ["TICKERS_PANCAKESWAP"] })";
+        send(msg.data(), msg.size());
+    }
+    void on_disconnected() override {
+        lwsl_user("client disconnected\n");
+    }
+    void on_error(const char* msg, size_t len) override {
+        lwsl_user("client error\n");
+    }
+    void on_data(const char* data, size_t len, size_t remaining) override {
+        std::string msg(data, len);
+        lwsl_user("data from server: %s\n", msg.c_str());
+    }
+};
+
+int main() {
+    lws_set_log_level(LLL_USER | LLL_ERR | LLL_WARN | LLL_NOTICE, nullptr);
+    websocket client;
+    client.connect();
+    while (client.working()) {
+    }
+    return 0;
+}
+```
+
 # Rest API
 
 - **Connection**
