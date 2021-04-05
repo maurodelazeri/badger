@@ -223,7 +223,7 @@ public:
 
     void on_connected() override {
         lwsl_user("client connected\n");
-        std::string msg = R"({ "type": "subscribe", "channels": ["TICKERS_PANCAKESWAP"] })";
+        std::string msg = R"({ "type": "subscribe", "channels": ["TICKERS_UNISWAPV2","TICKERS_SUSHISWAP"] })";
         send(msg.data(), msg.size());
     }
     void on_disconnected() override {
