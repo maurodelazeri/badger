@@ -236,7 +236,7 @@ const getPoolData = async (poolID) => {
 
     return {
       chain: "ETHEREUM",
-      protocol: "UNISWAP",
+      protocol: "UNISWAPV2",
       pool_id: poolID,
       symbol: symbol,
       name: name,

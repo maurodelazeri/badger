@@ -5,7 +5,7 @@ const Web3 = require("web3");
 //const connection = require("./connection");
 const config = require("./config");
 
-const { init: InitUniSwapV2 } = require("./protocols/uniswap_v2/");
+const { init: InitUniSwapV2 } = require("./protocols/uniswapv2/");
 const { init: InitSushiSwap } = require("./protocols/sushiswap/");
 const { init: InitBalancer } = require("./protocols/balancer/");
 const { init: InitBancor } = require("./protocols/bancor/");
