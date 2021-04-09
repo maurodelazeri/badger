@@ -286,7 +286,7 @@ Expected return:
 
 ### Active Pools
 
-* All active pools in the last 24hs. `/v1/active-pools/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data.
+* All active pools in the last 24hs. `/v1/active-pools/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data. Your `count` can change from request to request and the maximum per request is `1000`
 
 You have the option to filter by protocol or simply use `all` to get the active pools in the last 24 hours. We consider an active pool when any type of transaction is carried out. Note that there's no particular order in the responses, you will need to order it using the `block_number` or `processed_timestamp` fields.
 
@@ -372,7 +372,7 @@ Expected return:
 
 ### List Of All Pools
 
-* All pools of a given protocol. `/v1/pools/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data.
+* All pools of a given protocol. `/v1/pools/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data. Your `count` can change from request to request and the maximum per request is `1000`
 
 Please note that the `count` parameter is the amount of work that should be done at every call in order to retrieve elements from the collection and the result can represent more elements than what is specified in the count.
 
