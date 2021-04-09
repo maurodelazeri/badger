@@ -444,7 +444,7 @@ async function streamWorker(sync) {
         tokens: pair.tokens,
       };
 
-      ZMQ.zmqSendMsg("UNISWAPV2", poolID, JSON.stringify(ticker));
+      ZMQ.zmqSendMsg("TICKERS_UNISWAPV2", poolID, JSON.stringify(ticker));
 
       await redisClient.hset("POOLS:UNISWAPV2", poolID, JSON.stringify(pair));
 
