@@ -450,7 +450,7 @@ async function streamWorker(sync) {
         name: pair.name,
         immutable: pair.immutable,
         symbol: pair.symbol,
-        // decimals: pair.decimals.toString(),
+        decimals: pair.decimals.toString(),
         tokens: pair.tokens,
       };
 
