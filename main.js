@@ -11,6 +11,7 @@ const { init: InitBalancer } = require("./protocols/balancer/");
 const { init: InitBancor } = require("./protocols/bancor/");
 const { init: InitCurveFi } = require("./protocols/curvefi/");
 const { init: InitPancakeswap } = require("./protocols/pancakeswap/");
+const { init: InitBurgerswap } = require("./protocols/burgerswap/");
 
 try {
   var options = {
@@ -75,6 +76,9 @@ try {
       break;
     case "pancakeswap":
       InitPancakeswap(web3);
+      break;
+    case "burgerswap":
+      InitBurgerswap(web3);
       break;
     default:
       console.log("[PLEASE SELECT THE TARGEG: ex: uniswap]");

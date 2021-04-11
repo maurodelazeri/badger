@@ -25,7 +25,7 @@ https://api.etherscan.io/api?module=contract&action=getabi&address=0x7d86446ddb6
 
 ### Get ABI Binance Chain
 
-https://api.bscscan.com/api?module=contract&action=getabi&address=0xbeecd2ade82e1ab5e040acdf574f4a677e832092&apikey=CBPK3ZUYFHYANZ9SIF66GGZPB6ZB4X62VW
+https://api.bscscan.com/api?module=contract&action=getabi&address=0x8D118FB789D8330f24AFf16F8278A81e859512ee&apikey=CBPK3ZUYFHYANZ9SIF66GGZPB6ZB4X62VW
 
 
 ### Balancer first pools
