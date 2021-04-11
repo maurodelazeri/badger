@@ -54,6 +54,10 @@ async function init(web3Obj) {
 
   await loadNonStandartsTokens();
 
+  const pair = await getPoolData("0x40cb801b8d740883e963576c7fd87fc29747c52b");
+  console.log(pair);
+  process.exit();
+
   // await populateSwapPools(0);
 
   // process.exit();
