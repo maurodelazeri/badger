@@ -54,7 +54,7 @@ async function init(web3Obj) {
 
   await loadNonStandartsTokens();
 
-  const pair = await getPoolData("0x40cb801b8d740883e963576c7fd87fc29747c52b");
+  const pair = await getPoolData("0x7722bd537d6f08acbfcc72fa711f7fb95129087e");
   console.log(pair);
   process.exit();
 
@@ -209,9 +209,10 @@ const getPoolData = async (poolID) => {
     token0Addr = token0Addr.toLowerCase();
     let token1Addr = await poolContract.methods.token1().call();
     token1Addr = token1Addr.toLowerCase();
-    const symbol = await poolContract.methods.symbol().call();
-    const name = await poolContract.methods.name().call();
-    const decimals = await poolContract.methods.decimals().call();
+    //const symbol = await poolContract.methods.symbol().call();
+    //const name = await poolContract.methods.name().call();
+    //const decimals = await poolContract.methods.decimals().call();
+    const decimals = 18;
     const swap_fee = "0.30";
 
     let tokens = [];
@@ -248,8 +249,8 @@ const getPoolData = async (poolID) => {
       chain: "BSC",
       protocol: "BURGERSWAP",
       pool_id: poolID,
-      symbol: symbol,
-      name: name,
+      symbol: token0.symbol + "-" + token1.symbol,
+      name: token0.name + "-" + token1.name,
       swap_fee: swap_fee,
       decimals: decimals.toString(),
       immutable: true,
@@ -367,7 +368,7 @@ const createNewPool = async (poolID) => {
   // We expect to know beforehand all pools that belongs to sushi swap, this could be a false
   // positive while loading all pools on populateSwapPools only, but should fix itself
   if (!pool_pairs_map.has(poolID)) {
-    console.info("[BURGERSWAP] Not a sushi poll", poolID + "\n");
+    console.info("[BURGERSWAP] Not a burger poll", poolID + "\n");
     return false;
   }
 
@@ -453,7 +454,7 @@ async function streamWorker(sync) {
         name: pair.name,
         immutable: pair.immutable,
         symbol: pair.symbol,
-        decimals: pair.decimals.toString(),
+        // decimals: pair.decimals.toString(),
         tokens: pair.tokens,
       };
 
