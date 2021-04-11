@@ -454,9 +454,6 @@ async function streamWorker(sync) {
         tokens: pair.tokens,
       };
 
-      console.log(ticker);
-      return;
-
       ZMQ.zmqSendMsg("TICKERS_BURGERSWAP", poolID, JSON.stringify(ticker));
 
       await redisClient.hset("POOLS:BURGERSWAP", poolID, JSON.stringify(pair));
