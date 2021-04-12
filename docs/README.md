@@ -81,13 +81,14 @@ Return payload expected for the channel `TICKERS`:
 
 Messages are ordered in the same order as they occurred in the blocks, you can follow the field `sequence` to make sure you are not losing any message. The field `sequence` is incremental and `individial` **per protocol**, meaning, protocol `A` will have a different `sequence` than protocol `B`, the `sequence` also can eventually go back to `0`. You also can follow `blockNumber` that is the block that the transaction was mined.
 
-### ETH_GAS
+### GAS
 
-Return payload expected for the channel `ETH_GAS`:
+Return payload expected for the channel `GAS`:
 
 ```json
 {
    "health":true,
+   "chain":"ETHEREUM",
    "block_number":12154262,
    "slow":10.0,
    "standard":184.8,
