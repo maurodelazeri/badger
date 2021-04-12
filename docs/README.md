@@ -277,6 +277,28 @@ Expected return:
 ```json
 {
    "health":true,
+   "chain":"ETHEREUM",
+   "block_number":12154262,
+   "slow":10.0,
+   "standard":184.8,
+   "fast":203.1,
+   "instant":226.0,
+   "block_time":13.417
+}
+```
+
+### Binance Smart Chain Gas Estimation
+
+* Ethereum gas estimation `/v1/bsc_gas`. Slow, standard, fast and instant values represent minimal gas price of the latest 200 blocks. by default slow represents 30% probability, standard is 60%, fast is 90% and instant is 100%.
+
+https://api.zinnion.com/v1/bsc_gas
+
+Expected return:
+
+```json
+{
+   "health":true,
+   "chain":"BSC",
    "block_number":12154262,
    "slow":10.0,
    "standard":184.8,
