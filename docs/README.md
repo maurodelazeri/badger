@@ -107,12 +107,12 @@ Mainnet: `wss://wss.zinnion.com`
 
 - **Subscribe**
 
-In the example below, we are `subscribing` the `ticker` [`UNISWAPV2`](https://uniswap.exchange) for only the pool [`0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852`](https://etherscan.io/address/0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852) `(ETH/USDT)`  and all the tickers pools of [`SUSHISWAP`](https://sushi.com).
+In the example below, we are `subscribing` the `ticker` [`UNISWAPV2`](https://uniswap.exchange) for only the pool [`0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852`](https://etherscan.io/address/0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852) `(ETH/USDT)`  and all the tickers pools of [`SUSHISWAP`](https://sushi.com) and [`PANCAKESWAP`](https://pancakeswap.finance/).
 
 ```json
 {
   "type": "subscribe",
-  "channels": ["TICKERS_ETHEREUM_UNISWAPV2_0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852","TICKERS_ETHEREUM_SUSHISWAP"]
+  "channels": ["TICKERS_ETHEREUM_UNISWAPV2_0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852","TICKERS_ETHEREUM_SUSHISWAP","TICKERS_BSC_PANCAKESWAP"]
 }
 ```
 
@@ -288,13 +288,13 @@ Expected return:
 
 ### Active Pools
 
-* All active pools in the last 24hs. `/v1/active-pools/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data. Your `count` can change from request to request and the maximum per request is `1000`
+* All active pools in the last 24hs. `/v1/active-pools/:chain/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data. Your `count` can change from request to request and the maximum per request is `1000`
 
-You have the option to filter by protocol or simply use `all` to get the active pools in the last 24 hours. We consider an active pool when any type of transaction is carried out. Note that there's no particular order in the responses, you will need to order it using the `block_number` or `processed_timestamp` fields.
+You have the option to filter by `chain` and `protocol` to get the active pools in the last 24 hours. We consider an active pool when any type of transaction is carried out. Note that there's no particular order in the responses, you will need to order it using the `block_number` or `processed_timestamp` fields. You also can use `*` in `chain` and `protocol` to get all.
 
 Please note that the `count` parameter is the amount of work that should be done at every call in order to retrieve elements from the collection and the result can represent more elements than what is specified in the count.
 
-https://api.zinnion.com/v1/active-pools/all/0/2
+https://api.zinnion.com/v1/active-pools/ethereum/*/0/2
 
 Expected return:
 
@@ -374,11 +374,11 @@ Expected return:
 
 ### List Of All Pools
 
-* All pools of a given protocol. `/v1/pools/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data. Your `count` can change from request to request and the maximum per request is `1000`
+* All pools of a given protocol. `/v1/pools/:chain/:protocol/:cursor/:count`. The first request your cursor should be `0` and the subsequent requests your cursor should be the value returned in the field `next_cursor`. If `next_cursor` is equal to `0` there's no more data. Your `count` can change from request to request and the maximum per request is `1000`.
 
 Please note that the `count` parameter is the amount of work that should be done at every call in order to retrieve elements from the collection and the result can represent more elements than what is specified in the count.
 
-https://api.zinnion.com/v1/pools/uniswapv2/0/2
+https://api.zinnion.com/v1/pools/ethereum/uniswapv2/0/2
 
 Expected return:
 
@@ -454,9 +454,9 @@ Expected return:
 
 ### Pool Detail
 
-* Pool data. `/v1/pool/:protocol/:pool`
+* Pool data. `/v1/pool/:chain/:protocol/:pool`
 
-https://api.zinnion.com/v1/pool/uniswapv2/0xff417643d4e98b52c7e894407dd23f8edd8167f0
+https://api.zinnion.com/v1/pool/ethereum/uniswapv2/0xff417643d4e98b52c7e894407dd23f8edd8167f0
 
 Expected return:
 
@@ -499,9 +499,9 @@ Expected return:
 
 ### Token Detail
 
-* Token data. `/v1/token/:pool`
+* Token data. `/v1/token/:chain/:pool`
 
-https://api.zinnion.com/v1/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+https://api.zinnion.com/v1/token/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
 
 Note: the API only returns tokens that are present in the supported protocols.
 
