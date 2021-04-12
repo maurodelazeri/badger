@@ -56,7 +56,7 @@ async function init(web3Obj) {
   // process.exit();
 
   // If we already have tokens in memory, lets save some time pre loading it
-  const tokens = await loadListFromMemory("TOKENS");
+  const tokens = await loadListFromMemory("TOKENS:ETHEREUM");
 
   if (tokens) {
     const loadTokens = () => {
@@ -73,7 +73,7 @@ async function init(web3Obj) {
   }
 
   console.log("[UNISWAPV2] Loading Pools and Pairs");
-  const pools = await loadListFromMemory("POOLS:UNISWAPV2");
+  const pools = await loadListFromMemory("POOLS:ETHEREUM:UNISWAPV2");
 
   if (!pools) {
     console.error("[UNISWAPV2] No pools in memory, loading it...");
@@ -305,7 +305,11 @@ async function populateSwapPools(beginPoolIndex) {
         continue;
       }
 
-      await redisClient.hset("POOLS:UNISWAPV2", poolID, JSON.stringify(pair));
+      await redisClient.hset(
+        "POOLS:ETHEREUM:UNISWAPV2",
+        poolID,
+        JSON.stringify(pair)
+      );
 
       if (pair.tokens.length > 1) {
         if (
@@ -323,12 +327,12 @@ async function populateSwapPools(beginPoolIndex) {
           delete token1.reserves;
 
           await redisClient.hset(
-            "TOKENS",
+            "TOKENS:ETHEREUM",
             clone.tokens[0].address,
             JSON.stringify(token0)
           );
           await redisClient.hset(
-            "TOKENS",
+            "TOKENS:ETHEREUM",
             clone.tokens[1].address,
             JSON.stringify(token1)
           );
@@ -374,7 +378,11 @@ const createNewPool = async (poolID) => {
 
   pool_pairs_map.set(poolID, pair);
 
-  await redisClient.hset("POOLS:UNISWAPV2", poolID, JSON.stringify(pair));
+  await redisClient.hset(
+    "POOLS:ETHEREUM:UNISWAPV2",
+    poolID,
+    JSON.stringify(pair)
+  );
 
   if (pair.tokens.length > 1) {
     if (
@@ -392,12 +400,12 @@ const createNewPool = async (poolID) => {
       delete token1.reserves;
 
       await redisClient.hset(
-        "TOKENS",
+        "TOKENS:ETHEREUM",
         clone.tokens[0].address,
         JSON.stringify(token0)
       );
       await redisClient.hset(
-        "TOKENS",
+        "TOKENS:ETHEREUM",
         clone.tokens[1].address,
         JSON.stringify(token1)
       );
@@ -444,12 +452,23 @@ async function streamWorker(sync) {
         tokens: pair.tokens,
       };
 
-      ZMQ.zmqSendMsg("TICKERS_UNISWAPV2", poolID, JSON.stringify(ticker));
+      ZMQ.zmqSendMsg(
+        "TICKERS_ETHEREUM_UNISWAPV2",
+        poolID,
+        JSON.stringify(ticker)
+      );
 
-      await redisClient.hset("POOLS:UNISWAPV2", poolID, JSON.stringify(pair));
+      await redisClient.hset(
+        "POOLS:ETHEREUM:UNISWAPV2",
+        poolID,
+        JSON.stringify(pair)
+      );
 
-      await redisClient.set("ACTIVE:UNISWAPV2:" + poolID, JSON.stringify(pair));
-      await redisClient.expire("ACTIVE:UNISWAPV2:" + poolID, 86400);
+      await redisClient.set(
+        "ACTIVE:ETHEREUM:UNISWAPV2:" + poolID,
+        JSON.stringify(pair)
+      );
+      await redisClient.expire("ACTIVE:ETHEREUM:UNISWAPV2:" + poolID, 86400);
 
       msgSequence++;
     } else {

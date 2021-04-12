@@ -112,7 +112,7 @@ In the example below, we are `subscribing` the `ticker` [`UNISWAPV2`](https://un
 ```json
 {
   "type": "subscribe",
-  "channels": ["TICKERS_UNISWAPV2_0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852","TICKERS_SUSHISWAP"]
+  "channels": ["TICKERS_ETHEREUM_UNISWAPV2_0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852","TICKERS_ETHEREUM_SUSHISWAP"]
 }
 ```
 
@@ -123,7 +123,7 @@ In the example below, we are `unsubscribing` all tickers from [`SUSHISWAP`](http
 ```json
 {
   "type": "subscribe",
-  "channels": ["TICKERS_SUSHISWAP"],
+  "channels": ["TICKERS_ETHEREUM_SUSHISWAP"],
 }
 ```
 ## Examples
@@ -133,7 +133,7 @@ In the example below, we are `unsubscribing` all tickers from [`SUSHISWAP`](http
 ```
 > mauro@oraculo:~/zinnion/badger$ wscat -c wss://wss.zinnion.com
 Connected (press CTRL+C to quit)
-> { "type": "subscribe", "channels": ["TICKERS_UNISWAPV2","TICKERS_SUSHISWAP"] }
+> { "type": "subscribe", "channels": ["TICKERS_ETHEREUM_UNISWAPV2","TICKERS_ETHEREUM_SUSHISWAP"] }
 < {"status":"success","comment":"Stream subscribed."}
 ```
 ### Python
@@ -145,7 +145,7 @@ import json
 class subscription(object):
   def __init__(self, subscription):
     self.type = subscription
-    self.channels = ["TICKERS_UNISWAPV2"]
+    self.channels = ["TICKERS_ETHEREUM_UNISWAPV2"]
 
 ws = create_connection("wss://wss.zinnion.com")
 sub = subscription("subscribe")
@@ -167,7 +167,7 @@ const WebSocket = require('ws');
 const ws = new WebSocket('wss://wss.zinnion.com');
 
 ws.on('open', function open() {
-  ws.send('{ "type": "subscribe", "channels": ["TICKERS_UNISWAPV2","TICKERS_SUSHISWAP"] }');
+  ws.send('{ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_UNISWAPV2","TICKERS_ETHEREUM_SUSHISWAP"] }');
 });
 
 ws.on('message', function incoming(data) {
@@ -189,7 +189,7 @@ func main() {
 	signal.Notify(interrupt, os.Interrupt)
 	socket := gowebsocket.New("wss://wss.zinnion.com")
 	socket.OnConnected = func(socket gowebsocket.Socket) {
-		socket.SendText(`{ "type": "subscribe", "channels": ["TICKERS_UNISWAPV2","TICKERS_SUSHISWAP"] }`)
+		socket.SendText(`{ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_UNISWAPV2","TICKERS_ETHEREUM_SUSHISWAP"] }`)
 	}
 	socket.OnTextMessage = func(message string, socket gowebsocket.Socket) {
 		log.Println("Received message - " + message)
@@ -224,7 +224,7 @@ public:
 
     void on_connected() override {
         lwsl_user("client connected\n");
-        std::string msg = R"({ "type": "subscribe", "channels": ["TICKERS_UNISWAPV2","TICKERS_SUSHISWAP"] })";
+        std::string msg = R"({ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_UNISWAPV2","TICKERS_ETHEREUM_SUSHISWAP"] })";
         send(msg.data(), msg.size());
     }
     void on_disconnected() override {

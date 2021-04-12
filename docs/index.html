@@ -50,11 +50,11 @@
 
             sock.onopen = function() {
                 console.log("connected to " + wsuri);
-                sock.send('{ "type": "subscribe", "channels": ["TICKERS_UNISWAPV2","TICKERS_SUSHISWAP","TICKERS_BALANCER","TICKERS_BANCOR","TICKERS_BALANCER","TICKERS_CURVEFI"] }')
-                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_SUSHISWAP"] }')
-                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_BALANCER"] }')
-                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_BANCOR"] }')
-                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_CURVEFI"] }')                
+                sock.send('{ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_UNISWAPV2","TICKERS_ETHEREUM_SUSHISWAP","TICKERS_ETHEREUM_BALANCER","TICKERS_ETHEREUM_BANCOR","TICKERS_ETHEREUM_BALANCER","TICKERS_ETHEREUM_CURVEFI"] }')
+                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_SUSHISWAP"] }')
+                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_BALANCER"] }')
+                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_BANCOR"] }')
+                //sock.send('{ "type": "subscribe", "channels": ["TICKERS_ETHEREUM_CURVEFI"] }')                
             }
 
             sock.onclose = function(e) {

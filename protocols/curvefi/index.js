@@ -73,7 +73,7 @@ async function init(web3Obj) {
   // process.exit();
 
   // If we already have tokens in memory, lets save some time pre loading it
-  const tokens = await loadListFromMemory("TOKENS");
+  const tokens = await loadListFromMemory("TOKENS:ETHEREUM");
 
   if (tokens) {
     const loadTokens = () => {
@@ -90,7 +90,7 @@ async function init(web3Obj) {
   }
 
   console.log("[CURVEFI] Loading Pools and Pairs");
-  const pools = await loadListFromMemory("POOLS:CURVEFI");
+  const pools = await loadListFromMemory("POOLS:ETHEREUM:CURVEFI");
 
   if (!pools) {
     console.error("[CURVEFI] No pools in memory, loading it...");
@@ -326,7 +326,11 @@ async function populateSwapPools(beginPoolIndex) {
         continue;
       }
 
-      await redisClient.hset("POOLS:CURVEFI", poolID, JSON.stringify(pair));
+      await redisClient.hset(
+        "POOLS:ETHEREUM:CURVEFI",
+        poolID,
+        JSON.stringify(pair)
+      );
 
       if (pair.tokens.length > 1) {
         if (
@@ -344,12 +348,12 @@ async function populateSwapPools(beginPoolIndex) {
           delete token1.reserves;
 
           await redisClient.hset(
-            "TOKENS",
+            "TOKENS:ETHEREUM",
             clone.tokens[0].address,
             JSON.stringify(token0)
           );
           await redisClient.hset(
-            "TOKENS",
+            "TOKENS:ETHEREUM",
             clone.tokens[1].address,
             JSON.stringify(token1)
           );
@@ -392,7 +396,11 @@ const createNewPool = async (poolID) => {
 
   pool_pairs_map.set(poolID, pair);
 
-  await redisClient.hset("POOLS:CURVEFI", poolID, JSON.stringify(pair));
+  await redisClient.hset(
+    "POOLS:ETHEREUM:CURVEFI",
+    poolID,
+    JSON.stringify(pair)
+  );
 
   if (pair.tokens.length > 1) {
     if (
@@ -410,12 +418,12 @@ const createNewPool = async (poolID) => {
       delete token1.reserves;
 
       await redisClient.hset(
-        "TOKENS",
+        "TOKENS:ETHEREUM",
         clone.tokens[0].address,
         JSON.stringify(token0)
       );
       await redisClient.hset(
-        "TOKENS",
+        "TOKENS:ETHEREUM",
         clone.tokens[1].address,
         JSON.stringify(token1)
       );
@@ -464,12 +472,23 @@ async function streamWorker(sync) {
         tokens: pair.tokens,
       };
 
-      ZMQ.zmqSendMsg("TICKERS_CURVEFI", poolID, JSON.stringify(ticker));
+      ZMQ.zmqSendMsg(
+        "TICKERS_ETHEREUM_CURVEFI",
+        poolID,
+        JSON.stringify(ticker)
+      );
 
-      await redisClient.hset("POOLS:CURVEFI", poolID, JSON.stringify(pair));
+      await redisClient.hset(
+        "POOLS:ETHEREUM:CURVEFI",
+        poolID,
+        JSON.stringify(pair)
+      );
 
-      await redisClient.set("ACTIVE:CURVEFI:" + poolID, JSON.stringify(pair));
-      await redisClient.expire("ACTIVE:CURVEFI:" + poolID, 86400);
+      await redisClient.set(
+        "ACTIVE:ETHEREUM:CURVEFI:" + poolID,
+        JSON.stringify(pair)
+      );
+      await redisClient.expire("ACTIVE:ETHEREUM:CURVEFI:" + poolID, 86400);
 
       msgSequence++;
     } else {

@@ -101,7 +101,7 @@ async function init(web3Obj) {
   // process.exit();
 
   // If we already have tokens in memory, lets save some time pre loading it
-  const tokens = await loadListFromMemory("TOKENS");
+  const tokens = await loadListFromMemory("TOKENS:ETHEREUM");
 
   if (tokens) {
     const loadTokens = () => {
@@ -118,7 +118,7 @@ async function init(web3Obj) {
   }
 
   console.log("[BANCOR] Loading Pools and Pairs");
-  const pools = await loadListFromMemory("POOLS:BANCOR");
+  const pools = await loadListFromMemory("POOLS:ETHEREUM:BANCOR");
 
   const loadMaps = () => {
     return new Promise((resolve) => {
@@ -146,7 +146,7 @@ async function init(web3Obj) {
 
   await populateSwapPools();
 
-  //Shedulle pools check for every minute
+  // Shedulle pools check for every minute
   // schedule.scheduleJob("* * * * *", function () {
   //   checkForNewPools();
   // });
@@ -389,7 +389,7 @@ const createNewPool = async (poolID) => {
 
   pool_pairs_map.set(poolID, pair);
 
-  await redisClient.hset("POOLS:BANCOR", poolID, JSON.stringify(pair));
+  await redisClient.hset("POOLS:ETHEREUM:BANCOR", poolID, JSON.stringify(pair));
 
   if (pair.tokens.length > 1) {
     if (
@@ -407,12 +407,12 @@ const createNewPool = async (poolID) => {
       delete token1.reserves;
 
       await redisClient.hset(
-        "TOKENS",
+        "TOKENS:ETHEREUM",
         clone.tokens[0].address,
         JSON.stringify(token0)
       );
       await redisClient.hset(
-        "TOKENS",
+        "TOKENS:ETHEREUM",
         clone.tokens[1].address,
         JSON.stringify(token1)
       );
@@ -510,12 +510,19 @@ async function streamWorker(sync) {
       tokens: pair.tokens,
     };
 
-    ZMQ.zmqSendMsg("TICKERS_BANCOR", poolID, JSON.stringify(ticker));
+    ZMQ.zmqSendMsg("TICKERS_ETHEREUM_BANCOR", poolID, JSON.stringify(ticker));
 
-    await redisClient.hset("POOLS:BANCOR", poolID, JSON.stringify(pair));
+    await redisClient.hset(
+      "POOLS:ETHEREUM:BANCOR",
+      poolID,
+      JSON.stringify(pair)
+    );
 
-    await redisClient.set("ACTIVE:BANCOR:" + poolID, JSON.stringify(pair));
-    await redisClient.expire("ACTIVE:BANCOR:" + poolID, 86400);
+    await redisClient.set(
+      "ACTIVE:ETHEREUM:BANCOR:" + poolID,
+      JSON.stringify(pair)
+    );
+    await redisClient.expire("ACTIVE:ETHEREUM:BANCOR:" + poolID, 86400);
 
     msgSequence++;
 
