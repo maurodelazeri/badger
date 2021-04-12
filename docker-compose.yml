@@ -90,6 +90,29 @@ services:
         max-size: "2m"
         max-file: "10"
 
+  bsc_gas_monitor:
+    image: zinnionlcc/python3
+    hostname: bsc_gas_monitor
+    container_name: bsc_gas_monitor
+    restart: unless-stopped
+    ports:
+      - 6666:6666/tcp
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=gas_monitor
+      - RPC_URL=http://bsc.zinnion.com:8575
+      - CHAIN=BSC
+      - HTTP_PORT=6666
+      - ZQM_PUB_ADDR=tcp://cheetah.zinnion.com:31337
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
   eth_gas_monitor:
     image: zinnionlcc/python3
     hostname: eth_gas_monitor
@@ -100,12 +123,11 @@ services:
     environment:
       - MINIO_ACCESS_KEY=admin
       - MINIO_SECRET_KEY=Br@sa154
-      - PKG=eth_gas_monitor
-      - ETH_RPC_URL=http://web3.zinnion.com:8545
+      - PKG=gas_monitor
+      - RPC_URL=http://web3.zinnion.com:8545
+      - CHAIN=ETHEREUM
       - HTTP_PORT=7777
       - ZQM_PUB_ADDR=tcp://cheetah.zinnion.com:31337
-    depends_on:
-       - cheetah      
     command:
       - start.sh
     logging:
