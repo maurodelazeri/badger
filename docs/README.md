@@ -266,9 +266,9 @@ Mainnet: `https://api.zinnion.com`
 
 ## Endpoints
 
-### Ethereum Gas Estimation
+### Gas Estimation
 
-* Ethereum gas estimation `/v1/eth_gas`. Slow, standard, fast and instant values represent minimal gas price of the latest 200 blocks. by default slow represents 30% probability, standard is 60%, fast is 90% and instant is 100%.
+Ethereum gas estimation `/v1/eth_gas`. Slow, standard, fast and instant values represent minimal gas price of the latest 200 blocks. by default slow represents 30% probability, standard is 60%, fast is 90% and instant is 100%.
 
 https://api.zinnion.com/v1/eth_gas
 
@@ -287,9 +287,9 @@ Expected return:
 }
 ```
 
-### Binance Smart Chain Gas Estimation
 
-* Ethereum gas estimation `/v1/bsc_gas`. Slow, standard, fast and instant values represent minimal gas price of the latest 200 blocks. by default slow represents 30% probability, standard is 60%, fast is 90% and instant is 100%.
+
+Binance Smart Chain gas estimation `/v1/bsc_gas`. Slow, standard, fast and instant values represent minimal gas price of the latest 200 blocks. by default slow represents 30% probability, standard is 60%, fast is 90% and instant is 100%.
 
 https://api.zinnion.com/v1/bsc_gas
 
