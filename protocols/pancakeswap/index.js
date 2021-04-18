@@ -213,6 +213,14 @@ const getPoolData = async (poolID) => {
     const decimals = await poolContract.methods.decimals().call();
     const swap_fee = "0.30";
 
+    // if (xxx.symbol === "USDT" && yyy.symbol === "WBNB") {
+    //   fs.appendFileSync("usdt.txt", token0Addr + " - " + poolID + "\n");
+    // }
+
+    // if (xxx.symbol === "WBNB" && yyy.symbol === "USDT") {
+    //   fs.appendFileSync("usdt.txt", token1Addr + " - " + poolID + "\n");
+    // }
+
     let tokens = [];
 
     const reserves = await poolContract.methods.getReserves().call();
