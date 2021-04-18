@@ -14,7 +14,7 @@ const systemconfig = {
   },
   web3_bsc: {
     HOST: "bsc.zinnion.com",
-    PORT: 8547,
+    PORT: 7547,
     PROTOCOL: "ws",
   },
 };
