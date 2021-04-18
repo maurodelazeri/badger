@@ -35,7 +35,7 @@ const nonStandartToken = new Map(); // Used all time time since we have a couple
 
 // ROUTER
 // 0x05ff2b0db69458a0750badebc4f9e13add608c7f
-const PANCAKESWAP_FACTORY = "0x6725F303b657a9451d8BA641348b6761A6CC7a17"; // mainnet
+const PANCAKESWAP_FACTORY = "0xbcfccbde45ce874adcb698cc183debcf17952812"; // mainnet
 
 async function init(web3Obj) {
   web3 = web3Obj;
@@ -213,18 +213,13 @@ const getPoolData = async (poolID) => {
     const decimals = await poolContract.methods.decimals().call();
     const swap_fee = "0.30";
 
-    const xxx = await getTokenData(token0Addr);
-    const yyy = await getTokenData(token1Addr);
+    // if (xxx.symbol === "USDT" && yyy.symbol === "WBNB") {
+    //   fs.appendFileSync("usdt.txt", token0Addr + " - " + poolID + "\n");
+    // }
 
-    if (xxx.symbol === "DAI" && yyy.symbol === "WBNB") {
-      fs.appendFileSync("dai.txt", token0Addr + " - " + poolID + "\n");
-    }
-
-    if (xxx.symbol === "WBNB" && yyy.symbol === "DAI") {
-      fs.appendFileSync("dai.txt", token1Addr + " - " + poolID + "\n");
-    }
-
-    return;
+    // if (xxx.symbol === "WBNB" && yyy.symbol === "USDT") {
+    //   fs.appendFileSync("usdt.txt", token1Addr + " - " + poolID + "\n");
+    // }
 
     let tokens = [];
 
