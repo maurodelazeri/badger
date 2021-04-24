@@ -33,8 +33,8 @@ services:
     image: telegraf
     container_name: telegraf
     hostname: telegraf     
-    entrypoint:
-      telegraf --config /telegraf.conf
+    # entrypoint:
+    #   telegraf --config /telegraf.conf
     links:
       - influxdb
     volumes:
