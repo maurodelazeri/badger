@@ -1,10 +1,4 @@
 version: "3"
-
-networks:
-  default:
-    external:
-      name: external-net
-
 services:
   influxdb:
     container_name: influxdb
@@ -12,7 +6,7 @@ services:
     image: quay.io/influxdb/influxdb:v2.0.3
     volumes:
       # Mount for influxdb data directory and configuration
-      - ./influxDB:/root/.influxdbv2
+      - .\influxDB:/root/.influxdbv2
     ports:
       - "8086:8086"
   # Use the influx cli to set up an influxdb instance.
@@ -34,27 +28,9 @@ services:
     links:
       - influxdb
     volumes:
-      - ./telegraf.conf:/var/lib/influxdb
+      # Mount for telegraf config
+      - .\telegraf.conf:/var/lib/influxdb
     depends_on:
       - influxdb_cli
-
-  # badger_pancakeswap:
-  #   image: zinnionlcc/node
-  #   hostname: badger_pancakeswap
-  #   container_name: badger_pancakeswap
-  #   restart: unless-stopped        
-  #   environment:
-  #     - MINIO_ACCESS_KEY=admin
-  #     - MINIO_SECRET_KEY=Br@sa154
-  #     - PKG=badger
-  #     - DEX=pancakeswap
-  #     - CHAIN=bsc
-  #   depends_on:
-  #      - influxdb
-  #   command:
-  #     - start.sh
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "2m"
-  #       max-file: "10"
+volumes:
+  influxdbv2:

@@ -1,8 +1,4 @@
 const systemconfig = {
-  redis: {
-    HOST: "redis.zinnion.com",
-    AUTH: "Br@sa154",
-  },
   zmq: {
     HOST: "cheetah.zinnion.com",
     PORT: 31337,
@@ -14,8 +10,7 @@ const systemconfig = {
   },
   web3_bsc: {
     HOST: "bsc.zinnion.com",
-    //PORT: 8547, // Mainnet
-    PORT: 7547, // Testnet
+    PORT: 8547,
     PROTOCOL: "ws",
   },
 };
