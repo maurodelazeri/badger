@@ -5,13 +5,13 @@ const Web3 = require("web3");
 //const connection = require("./connection");
 const config = require("./config");
 
-// const { init: InitUniSwapV2 } = require("./protocols/uniswapv2/");
-// const { init: InitSushiSwap } = require("./protocols/sushiswap/");
-// const { init: InitBalancer } = require("./protocols/balancer/");
-// const { init: InitBancor } = require("./protocols/bancor/");
-// const { init: InitCurveFi } = require("./protocols/curvefi/");
+const { init: InitUniSwapV2 } = require("./protocols/uniswapv2/");
+const { init: InitSushiSwap } = require("./protocols/sushiswap/");
+const { init: InitBalancer } = require("./protocols/balancer/");
+const { init: InitBancor } = require("./protocols/bancor/");
+const { init: InitCurveFi } = require("./protocols/curvefi/");
 const { init: InitPancakeswap } = require("./protocols/pancakeswap/");
-// const { init: InitBurgerswap } = require("./protocols/burgerswap/");
+const { init: InitBurgerswap } = require("./protocols/burgerswap/");
 
 try {
   var options = {
@@ -59,27 +59,27 @@ try {
   const args = process.argv;
 
   switch (args[2]) {
-    // case "uniswapv2":
-    //   InitUniSwapV2(web3);
-    //   break;
-    // case "sushiswap":
-    //   InitSushiSwap(web3);
-    //   break;
-    // case "balancer":
-    //   InitBalancer(web3);
-    //   break;
-    // case "bancor":
-    //   InitBancor(web3);
-    //   break;
-    // case "curvefi":
-    //   InitCurveFi(web3);
-    //   break;
+    case "uniswapv2":
+      InitUniSwapV2(web3);
+      break;
+    case "sushiswap":
+      InitSushiSwap(web3);
+      break;
+    case "balancer":
+      InitBalancer(web3);
+      break;
+    case "bancor":
+      InitBancor(web3);
+      break;
+    case "curvefi":
+      InitCurveFi(web3);
+      break;
     case "pancakeswap":
       InitPancakeswap(web3);
       break;
-    // case "burgerswap":
-    //   InitBurgerswap(web3);
-    //   break;
+    case "burgerswap":
+      InitBurgerswap(web3);
+      break;
     default:
       console.log("[PLEASE SELECT THE TARGEG: ex: uniswap]");
       process.exit();

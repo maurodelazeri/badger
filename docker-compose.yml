@@ -6,59 +6,284 @@ networks:
       name: external-net
 
 services:
-  influxdb:
-    container_name: influxdb
-    hostname: influxdb          
-    image: quay.io/influxdb/influxdb:v2.0.3
-    volumes:
-      # Mount for influxdb data directory and configuration
-      - ./influxDB:/root/.influxdbv2
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    restart: unless-stopped
+    stop_signal: SIGINT
+    stop_grace_period: 2m
     ports:
-      - "8086:8086"
-  # Use the influx cli to set up an influxdb instance.
-  influxdb_cli:
-    container_name: influxdb_cli
-    hostname: influxdb_cli          
-    links:
-      - influxdb
-    image: quay.io/influxdb/influxdb:v2.0.3
-    # Use these same configurations parameters in your telegraf configuration, mytelegraf.conf.
-    entrypoint:
-      influx setup --bucket dex -t OGymrpHW2WrG3pMwlGWQ2ZKtYJR5KxGoEFL -o zinnion --username=zinnion --password=Br@sa154 --host=http://influxdb:8086 -f
-      # Wait for the influxd service in the influxdb container has fully bootstrapped before trying to setup an influxdb instance with the influxdb_cli service.
-    restart: on-failure:10
-    depends_on:
-      - influxdb
-  telegraf:
-    image: telegraf
-    container_name: telegraf
-    hostname: telegraf     
-    entrypoint:
-      telegraf --config /telegraf.conf
-    links:
-      - influxdb
+      - "6379:6379"
     volumes:
-      - ./telegraf.conf:/telegraf.conf
-    depends_on:
-      - influxdb_cli
+      - redis:/data
+      - ./redis.conf:/redis.conf
+    command: ["redis-server", "/redis.conf"]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
 
-  # badger_pancakeswap:
-  #   image: zinnionlcc/node
-  #   hostname: badger_pancakeswap
-  #   container_name: badger_pancakeswap
-  #   restart: unless-stopped        
-  #   environment:
-  #     - MINIO_ACCESS_KEY=admin
-  #     - MINIO_SECRET_KEY=Br@sa154
-  #     - PKG=badger
-  #     - DEX=pancakeswap
-  #     - CHAIN=bsc
-  #   depends_on:
-  #      - influxdb
-  #   command:
-  #     - start.sh
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "2m"
-  #       max-file: "10"
+  cheetah:
+    image: zinnionlcc/cpp
+    hostname: cheetah
+    container_name: cheetah
+    restart: unless-stopped
+    environment:
+      - LIVE=true
+      - DEBUG=true
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - START_BIN=cheetah
+    ports:
+      - 31337:31337/tcp
+      - 31338:31338/tcp
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  sailfish:
+    image: zinnionlcc/cpp
+    hostname: sailfish
+    container_name: sailfish
+    restart: unless-stopped
+    environment:
+      - LIVE=true
+      - DEBUG=true
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - START_BIN=sailfish
+      - ZMQ_SUB_CONNECTION=tcp://cheetah.zinnion.com:31338
+    ports:
+      - 9001:9001/tcp
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  badger_docs:
+    image: zinnionlcc/node
+    hostname: badger_docs
+    container_name: badger_docs
+    restart: unless-stopped
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger_docs
+    ports:
+      - 8080:8080/tcp
+    command:
+      - start_docs.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  bsc_gas_monitor:
+    image: zinnionlcc/python3
+    hostname: bsc_gas_monitor
+    container_name: bsc_gas_monitor
+    restart: unless-stopped
+    ports:
+      - 6666:6666/tcp
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=gas_monitor
+      - RPC_URL=http://bsc.zinnion.com:8575
+      - CHAIN=BSC
+      - HTTP_PORT=6666
+      - ZQM_PUB_ADDR=tcp://cheetah.zinnion.com:31337
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  eth_gas_monitor:
+    image: zinnionlcc/python3
+    hostname: eth_gas_monitor
+    container_name: eth_gas_monitor
+    restart: unless-stopped
+    ports:
+      - 7777:7777/tcp
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=gas_monitor
+      - RPC_URL=http://web3.zinnion.com:8545
+      - CHAIN=ETHEREUM
+      - HTTP_PORT=7777
+      - ZQM_PUB_ADDR=tcp://cheetah.zinnion.com:31337
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  badger_uniswapv2:
+    image: zinnionlcc/node
+    hostname: badger_uniswapv2
+    container_name: badger_uniswapv2
+    restart: unless-stopped
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=uniswapv2
+      - CHAIN=ethereum
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+
+  badger_sushiswap:
+    image: zinnionlcc/node
+    hostname: badger_sushiswap
+    container_name: badger_sushiswap
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=sushiswap
+      - CHAIN=ethereum
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+
+  badger_balancer:
+    image: zinnionlcc/node
+    hostname: badger_balancer
+    container_name: badger_balancer
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=balancer
+      - CHAIN=ethereum
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  badger_bancor:
+    image: zinnionlcc/node
+    hostname: badger_bancor
+    container_name: badger_bancor
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=bancor
+      - CHAIN=ethereum
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"        
+
+  badger_curvefi:
+    image: zinnionlcc/node
+    hostname: badger_curvefi
+    container_name: badger_curvefi
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=curvefi
+      - CHAIN=ethereum
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"  
+        
+  badger_pancakeswap:
+    image: zinnionlcc/node
+    hostname: badger_pancakeswap
+    container_name: badger_pancakeswap
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=pancakeswap
+      - CHAIN=bsc
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"          
+
+  badger_burgerswap:
+    image: zinnionlcc/node
+    hostname: badger_burgerswap
+    container_name: badger_burgerswap
+    restart: unless-stopped        
+    environment:
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=Br@sa154
+      - PKG=badger
+      - DEX=burgerswap
+      - CHAIN=bsc
+    depends_on:
+       - cheetah
+    command:
+      - start.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"         
+
+volumes:
+  redis: {}          
