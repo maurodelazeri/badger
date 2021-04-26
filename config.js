@@ -14,8 +14,7 @@ const systemconfig = {
   },
   web3_bsc: {
     HOST: "bsc.zinnion.com",
-    //PORT: 8547, // Mainnet
-    PORT: 7547, // Testnet
+    PORT: 8547, // Testnet
     PROTOCOL: "ws",
   },
 };
