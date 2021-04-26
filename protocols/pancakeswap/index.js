@@ -34,8 +34,7 @@ const tokens_map = new Map(); // Used all the time to minimize request to static
 const nonStandartToken = new Map(); // Used all time time since we have a couple non standart erc20
 
 // ROUTER
-// 0x05ff2b0db69458a0750badebc4f9e13add608c7f
-const PANCAKESWAP_FACTORY = "0xbcfccbde45ce874adcb698cc183debcf17952812"; // mainnet
+const PANCAKESWAP_FACTORY = "0xbcfccbde45ce874adcb698cc183debcf17952812";
 
 async function init(web3Obj) {
   web3 = web3Obj;
@@ -56,10 +55,6 @@ async function init(web3Obj) {
   };
 
   await loadNonStandartsTokens();
-
-  // await populateSwapPools(0);
-
-  // process.exit();
 
   // If we already have tokens in memory, lets save some time pre loading it
   const tokens = await loadListFromMemory("TOKENS:BSC");
@@ -116,9 +111,6 @@ async function init(web3Obj) {
   swapWatcher();
 
   console.log("[PANCAKESWAP] Started", totalPools, "pools");
-
-  // Lazy Load
-  await populateSwapPools(0);
 
   // Shedulle pools check for every minute
   schedule.scheduleJob("* * * * *", function () {
@@ -212,14 +204,6 @@ const getPoolData = async (poolID) => {
     const name = await poolContract.methods.name().call();
     const decimals = await poolContract.methods.decimals().call();
     const swap_fee = "0.30";
-
-    // if (xxx.symbol === "USDT" && yyy.symbol === "WBNB") {
-    //   fs.appendFileSync("usdt.txt", token0Addr + " - " + poolID + "\n");
-    // }
-
-    // if (xxx.symbol === "WBNB" && yyy.symbol === "USDT") {
-    //   fs.appendFileSync("usdt.txt", token1Addr + " - " + poolID + "\n");
-    // }
 
     let tokens = [];
 
@@ -478,12 +462,6 @@ async function streamWorker(sync) {
         poolID,
         JSON.stringify(pair)
       );
-
-      await redisClient.set(
-        "ACTIVE:BSC:PANCAKESWAP:" + poolID,
-        JSON.stringify(pair)
-      );
-      await redisClient.expire("ACTIVE:BSC:PANCAKESWAP:" + poolID, 86400);
 
       msgSequence++;
     } else {
