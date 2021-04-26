@@ -487,8 +487,8 @@ async function streamWorker(sync) {
         .floatField(
           "token1Price",
           pair.tokens[1].reserves / pair.tokens[0].reserves
-        )
-        .timestamp(pair.processed_timestamp);
+        );
+      // .timestamp(pair.processed_timestamp);
       writeApi.writePoint(point);
       writeApi
         .close()
