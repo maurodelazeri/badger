@@ -6,6 +6,7 @@ const _colors = require("colors");
 const moment = require("moment");
 const schedule = require("node-schedule");
 const cliProgress = require("cli-progress");
+const { Point } = require("@influxdata/influxdb-client");
 const factoryABI = JSON.parse(
   fs.readFileSync("./abi/pancakeswapFactoryABI.json")
 );
@@ -35,6 +36,17 @@ const nonStandartToken = new Map(); // Used all time time since we have a couple
 
 // ROUTER
 const PANCAKESWAP_FACTORY = "0xbcfccbde45ce874adcb698cc183debcf17952812";
+
+const { InfluxDB } = require("@influxdata/influxdb-client");
+
+// Influxdb
+const token = "OGymrpHW2WrG3pMwlGWQ2ZKtYJR5KxGoEFL";
+const org = "zinnion";
+const bucket = "dex";
+const client = new InfluxDB({
+  url: "http://influx.zinnion.com:8086",
+  token: token,
+});
 
 async function init(web3Obj) {
   web3 = web3Obj;
@@ -454,6 +466,39 @@ async function streamWorker(sync) {
         decimals: pair.decimals.toString(),
         tokens: pair.tokens,
       };
+
+      const writeApi = client.getWriteApi(org, bucket);
+      writeApi.useDefaultTags({ host: "host1" });
+
+      const point = new Point("ticker")
+        .measurement("chain", pair.chain)
+        .tag("pool", poolID)
+        .tag("protocol", pair.protocol)
+        .tag("token0name", pair.tokens[0].address)
+        .tag("token1name", pair.tokens[1].address)
+        .tag("address0", pair.tokens[0].address)
+        .tag("address1", pair.tokens[1].address)
+        .floatField("token0Reserves", pair.tokens[0].reserves)
+        .floatField(
+          "token0Price",
+          pair.tokens[0].reserves / pair.tokens[1].reserves
+        )
+        .floatField("token1Reserves", pair.tokens[1].reserves)
+        .floatField(
+          "token1Price",
+          pair.tokens[1].reserves / pair.tokens[0].reserves
+        )
+        .timestamp(pair.processed_timestamp);
+      writeApi.writePoint(point);
+      writeApi
+        .close()
+        .then(() => {
+          console.log("FINISHED");
+        })
+        .catch((e) => {
+          console.error(e);
+          console.log("\\nFinished ERROR");
+        });
 
       ZMQ.zmqSendMsg("TICKERS_BSC_PANCAKESWAP", poolID, JSON.stringify(ticker));
 
